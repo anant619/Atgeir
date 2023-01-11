@@ -3,5 +3,5 @@ numpy
 pandas
 psycopg2
 pyyaml
-shlex
+pyshlex
 subprocess
