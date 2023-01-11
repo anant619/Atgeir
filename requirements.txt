@@ -1,1 +1,7 @@
 boto3
+numpy
+pandas
+psycopg2
+pyyaml
+shlex
+subprocess
