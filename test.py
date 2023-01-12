@@ -18,8 +18,8 @@ import configparser
 from datetime import timedelta
 import yaml
 import subprocess
-# import shlex
-# import subprocess
+import shlex
+import subprocess
 
 # import datahub
 # from airflow.operators.pipeline_operator import PipPackageOperator
@@ -204,8 +204,8 @@ def metadata_profiling():
         # pipeline.run()
         # pipeline.raise_from_status()
         # subprocess.run(["datahub", "ingest", "-c", "--config", "path/to/config.yml"], check=True)
-#         call_datahub(local_file)
-#         upload_file(output_path, 'sayali2', source_type, output_file_name)
+        call_datahub(local_file)
+        upload_file(output_path, 'sayali2', source_type, output_file_name)
 
         return 'success'
 
