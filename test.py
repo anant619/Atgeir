@@ -206,7 +206,7 @@ def metadata_profiling():
         # pipeline.raise_from_status()
         # subprocess.run(["datahub", "ingest", "-c", "--config", "path/to/config.yml"], check=True)
         call_datahub(local_file)
-        upload_file(output_path, 'sayali2', source_type, output_file_name)
+        upload_file(output_path, 'datahub-sh', source_type, output_file_name)
 
         return 'success'
 
