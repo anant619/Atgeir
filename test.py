@@ -157,7 +157,7 @@ def upload_file(file_path, bucket_name, source, output_file_name):
 
 def call_datahub(path):
     try:
-        script_path = "s3://sayali3/datahub_call.sh"  # for ec2
+        script_path = "s3://datahub-sh/datahub_call.sh"  # for ec2
         # script_path = "Metadata_Ingestion/scripts/datahub_call.sh"  # for local
 
         subprocess.call(shlex.split(f"sh {script_path} {path}"))
