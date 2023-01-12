@@ -112,6 +112,7 @@ def up_yml(JSONDict):
         source_config['provision_role']['admin_password'] = 'Atgeir@03'
         source_config['account_id'] = F'{JSONDict.get("ACCOUNT")}'
 #         source_config['check_role_grants'] = 'false'
+        source_config['run_ingestion'] = 'true'
         source_config['warehouse'] = F'{JSONDict.get("WAREHOUSE")}'
         source_config['role'] = F'{JSONDict.get("ROLE")}'
         configfile['sink']['config']['filename'] = output_path
