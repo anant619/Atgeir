@@ -77,20 +77,20 @@ def create_json(data):
                 tableMetadata['columnCount'] = dataset.get('columnCount')
                 tableMetadata['sizeInBytes'] = dataset.get('sizeInBytes')
                 temp_list = []
-                for field in dataset.get('fieldProfiles'):
-                    temp_dict = {}
-                    temp_dict['fieldName'] = field.get('fieldPath') 
-                    temp_dict['uniqueCount'] = field.get('uniqueCount')
-                    temp_dict['uniqueProportion'] = field.get('uniqueProportion')
-                    temp_dict['nullCount'] = field.get('nullCount')
-                    temp_dict['nullProportion'] = field.get('nullProportion')
-                    temp_dict['min'] = field.get('min')
-                    temp_dict['max'] = field.get('max')
-                    temp_dict['mean'] = field.get('mean')
-                    temp_dict['median'] =field.get('median')
-                    temp_dict['distinctValueFrequencies'] = field.get('distinctValueFrequencies')
-                    temp_dict['sampleValues'] = field.get('sampleValues')
-                    temp_list.append(temp_dict)
+#                 for field in dataset.get('fieldProfiles'):
+#                     temp_dict = {}
+#                     temp_dict['fieldName'] = field.get('fieldPath') 
+#                     temp_dict['uniqueCount'] = field.get('uniqueCount')
+#                     temp_dict['uniqueProportion'] = field.get('uniqueProportion')
+#                     temp_dict['nullCount'] = field.get('nullCount')
+#                     temp_dict['nullProportion'] = field.get('nullProportion')
+#                     temp_dict['min'] = field.get('min')
+#                     temp_dict['max'] = field.get('max')
+#                     temp_dict['mean'] = field.get('mean')
+#                     temp_dict['median'] =field.get('median')
+#                     temp_dict['distinctValueFrequencies'] = field.get('distinctValueFrequencies')
+#                     temp_dict['sampleValues'] = field.get('sampleValues')
+#                     temp_list.append(temp_dict)
                 tableMetadata['fieldsData'] = temp_list
             
             elif i.get('aspectName') == 'datasetUsageStatistics':
