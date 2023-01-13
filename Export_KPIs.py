@@ -54,45 +54,45 @@ print("login Successful")
 s3_bucket = s3.Bucket(pgs_config_bucket)
 
 for file in s3_bucket.objects.all():
-    obj = s3.Object(pgs_config_bucket, file.key)
-    body = obj.get()['Body'].read().decode('utf-8')
-    print(obj, body)
-    config = json.loads(body)
-    logging.info("Successful!")
-    print("Successful")
-    source_type = config['source_type']
-    host = config['host']
-    username = config['username']
-    password = config['password']
-    database = config['database']
+#     obj = s3.Object(pgs_config_bucket, file.key)
+#     body = obj.get()['Body'].read().decode('utf-8')
+#     print(obj, body)
+#     config = json.loads(body)
+#     logging.info("Successful!")
+#     print("Successful")
+#     source_type = config['source_type']
+#     host = config['host']
+#     username = config['username']
+#     password = config['password']
+#     database = config['database']
 
-    session = postgre_connect(host, database, username, password)
-    sf_conn_sql = f"select properties from data_sources where description = 'ML';"
-    df = create_dataframe(sf_conn_sql, session)
-    config = df['properties'][0]
-    new_dict = json.loads(config)
-    JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+#     session = postgre_connect(host, database, username, password)
+#     sf_conn_sql = f"select properties from data_sources where description = 'ML';"
+#     df = create_dataframe(sf_conn_sql, session)
+#     config = df['properties'][0]
+#     new_dict = json.loads(config)
+#     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
  
-    sf_account = JSONDict.get('ACCOUNT')
-    sf_role = JSONDict.get('ROLE')
-    #sf_user = JSONDict.get('NAME')
-    sf_user = 'sayali'
-    #sf_password = JSONDict.get('SNOWFLAKE', 'sf_password')
-    sf_warehouse = JSONDict.get('WAREHOUSE')
-    sf_database = JSONDict.get('DATABASE')
-    sf_schema = JSONDict.get('SCHEMA')
-    sf_password = 'Atgeir@03'
-    #sf_table = JSONDict.get('SNOWFLAKE', 'sf_table')
-    sf_table = 'METADATA_REPORT'
+#     sf_account = JSONDict.get('ACCOUNT')
+#     sf_role = JSONDict.get('ROLE')
+#     #sf_user = JSONDict.get('NAME')
+#     sf_user = 'sayali'
+#     #sf_password = JSONDict.get('SNOWFLAKE', 'sf_password')
+#     sf_warehouse = JSONDict.get('WAREHOUSE')
+#     sf_database = JSONDict.get('DATABASE')
+#     sf_schema = JSONDict.get('SCHEMA')
+#     sf_password = 'Atgeir@03'
+#     #sf_table = JSONDict.get('SNOWFLAKE', 'sf_table')
+#     sf_table = 'METADATA_REPORT'
     
-    #sf_account = 'AFA78268'
-    #sf_role = 'ACCOUNTADMIN'
-    #sf_user = 'sayali'
-    #sf_password = 'Atgeir@03'
-    #sf_warehouse = 'HAWKEYE_WH'
-    #sf_database = 'DATAGEIR_HAWKEYE_DEV'
-    #sf_schema = 'HAWKEYE_APP'
-    #sf_table = 'METADATA_REPORT'
+    sf_account = 'AFA78268'
+    sf_role = 'ACCOUNTADMIN'
+    sf_user = 'sayali'
+    sf_password = 'Atgeir@03'
+    sf_warehouse = 'HAWKEYE_WH'
+    sf_database = 'DATAGEIR_HAWKEYE_DEV'
+    sf_schema = 'HAWKEYE_APP'
+    sf_table = 'METADATA_REPORT'
 
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     # try:
