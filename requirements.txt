@@ -5,3 +5,6 @@ psycopg2
 pyyaml
 acryl-datahub[snowflake]
 psycopg2-binary
+neo4j
+pyarrow
+pyparqueta
