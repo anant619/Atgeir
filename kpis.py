@@ -138,15 +138,15 @@ s3_bucket = s3.Bucket(bucket)
 # RunId = get_RunId()
 
 for file in s3_bucket.objects.all():
-    if str(RunId) in file.key:
-        obj = s3.Object(bucket, file.key)
-        body = obj.get()['Body'].read().decode('utf-8')
-        try:
-            data = json.loads(body)
-            table_data = create_json(data)
-            with driver.session(database="neo4j") as session:
-                session.execute_write(g.create_graph, table_data)
-        except ValueError as e:
-            print ("Json is not valid")
+#     if str(RunId) in file.key:
+  obj = s3.Object(bucket, file.key)
+  body = obj.get()['Body'].read().decode('utf-8')
+  try:
+      data = json.loads(body)
+      table_data = create_json(data)
+      with driver.session(database="neo4j") as session:
+          session.execute_write(g.create_graph, table_data)
+  except ValueError as e:
+      print ("Json is not valid")
 
 driver.close()
