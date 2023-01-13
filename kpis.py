@@ -68,8 +68,8 @@ def create_json(data):
 #                     temp_dict['recursive'] = field.get('recursive')
 #                     temp_list.append(temp_dict)
 #                 tableMetadata['fields'] = temp_list
-            elif i.get('aspectName') == 'datasetProperties' or i.get('aspectName') == 'DatasetProperties':
-                tableMetadata['tags'] = json.loads(i.get('aspect').get('value')).get('tags')
+#             elif i.get('aspectName') == 'datasetProperties' or i.get('aspectName') == 'DatasetProperties':
+#                 tableMetadata['tags'] = json.loads(i.get('aspect').get('value')).get('tags')
 
 #             elif i.get('aspectName') == 'datasetProfile':
 #                 dataset = json.loads(i.get('aspect').get('value'))
