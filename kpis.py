@@ -5,7 +5,7 @@ import Utilities as utils
 import boto3
 import graph as g
 
-driver = utils.get_graph_driver("neo4j://localhost:7474","neo4j","sayali@123")
+driver = utils.get_graph_driver("neo4j://44.204.128.255:7474","neo4j","sayali@123")
 
 sys.path.append("../")
 #config_dir = "../configs/config.properties"  # for ec2
