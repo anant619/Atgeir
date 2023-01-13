@@ -92,7 +92,7 @@ def create_json(data):
 #                     temp_dict['distinctValueFrequencies'] = field.get('distinctValueFrequencies')
 #                     temp_dict['sampleValues'] = field.get('sampleValues')
 #                     temp_list.append(temp_dict)
-#                 tableMetadata['fieldsData'] = temp_list
+                tableMetadata['fieldsData'] = temp_list
             
             elif i.get('aspectName') == 'datasetUsageStatistics':
                 datasetUsage.append(json.loads(i.get('aspect').get('value')))
