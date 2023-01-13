@@ -3,6 +3,7 @@ import pandas as pd
 import sys
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
+import boto3
 
 def postgre_connect(host, database, user, password):
     conn = None
