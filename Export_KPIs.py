@@ -21,7 +21,7 @@ try:
 #     sf_table = config.get('SNOWFLAKE', 'sf_table')
 
 
-      sf_account = config.get('SNOWFLAKE', 'sf_account')
+      sf_account = 'AFA78268'
       sf_role = 'ACCOUNTADMIN'
       sf_user = 'sayali'
       sf_password = 'Atgeir@03'
