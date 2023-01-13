@@ -86,7 +86,7 @@ collect( DISTINCT { FieldName:f.name, DataType:f.DataType, IsNullable:f.IsNullab
 
 try:
       driver = utils.get_graph_driver(
-        neo4j://44.204.128.255:7687", "neo4j", "sayali@1234")
+        "neo4j://44.204.128.255:7687", "neo4j", "sayali@123")
    # URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
 #       URI = "neo4j://44.204.128.255:7687"
 #       AUTH = ("neo4j", "sayali@123")
