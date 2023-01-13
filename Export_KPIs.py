@@ -21,7 +21,7 @@ def postgre_connect(host, database, user, password):
 config_dir = "./config.properties"  # for ec2
 
 try:
-    config = read_config_file(config_dir)
+    config = utils.read_config_file(config_dir)
     pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
     aws_access_key_id = config.get('AWS', 'aws_access_key_id')
     aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
