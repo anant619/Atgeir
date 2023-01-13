@@ -139,7 +139,7 @@ s3 = boto3.resource(
         aws_access_key_id='AKIAVOZRE44NWUEQAAVF',
         aws_secret_access_key='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'
     )
-logging.info("login Successful!")
+# logging.info("login Successful!")
 print("login Successful")
 s3_bucket = s3.Bucket(bucket)
 print(s3_bucket)
