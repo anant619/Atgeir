@@ -107,21 +107,21 @@ def create_json(data):
 #         elif "proposedSnapshot" in i.keys():
 #            dataset = i["proposedSnapshot"].get("com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot").get('aspects')
            
-       if len(dataset) > 2:
-        tableMetadata['tags']  = dataset[1].get('com.linkedin.pegasus2avro.dataset.DatasetProperties').get('tags')
-        tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"] =  dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get('schemaName').split('.')
+   if len(dataset) > 2:
+    tableMetadata['tags']  = dataset[1].get('com.linkedin.pegasus2avro.dataset.DatasetProperties').get('tags')
+    tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"] =  dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get('schemaName').split('.')
 
-        fields = dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get("fields")
-        temp_list = []
-        for field in fields:
-            temp_dict = {}
-            temp_dict['fieldName'] = field.get('fieldPath')
-            temp_dict['dataType'] = field.get('nativeDataType')
-            temp_dict['isNullable'] = field.get('nullable')
-            temp_dict['isPartOfKey'] = field.get('isPartOfKey')
-            temp_dict['recursive'] = field.get('recursive')
-            temp_list.append(temp_dict)
-        tableMetadata['fields'] = temp_list
+    fields = dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get("fields")
+    temp_list = []
+    for field in fields:
+        temp_dict = {}
+        temp_dict['fieldName'] = field.get('fieldPath')
+        temp_dict['dataType'] = field.get('nativeDataType')
+        temp_dict['isNullable'] = field.get('nullable')
+        temp_dict['isPartOfKey'] = field.get('isPartOfKey')
+        temp_dict['recursive'] = field.get('recursive')
+        temp_list.append(temp_dict)
+    tableMetadata['fields'] = temp_list
 
     if len(action) > 0:
         tableMetadata['action'] = action
