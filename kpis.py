@@ -161,7 +161,7 @@ s3 = boto3.resource(
 # logging.info("login Successful!")
 print("login Successful")
 s3_bucket = s3.Bucket(bucket)
-RunId = get_RunId()
+# RunId = get_RunId()
 
 for file in s3_bucket.objects.all():
 #     if str(RunId) in file.key:
