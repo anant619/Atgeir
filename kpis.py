@@ -68,6 +68,7 @@ def create_json(data):
                 tableMetadata['columnCount'] = dataset.get('columnCount')
                 tableMetadata['sizeInBytes'] = dataset.get('sizeInBytes')
                 temp_list = []
+                print(dataset)
                 for field in dataset.get('fieldProfiles'):
                     temp_dict = {}
                     temp_dict['fieldName'] = field.get('fieldPath') 
@@ -153,7 +154,6 @@ for file in s3_bucket.objects.all():
   print(body)
   try:
       data = json.loads(body)
-      print(data)
       table_data = create_json(data)
       with driver.session(database="neo4j") as session:
           session.execute_write(g.create_graph, table_data)
