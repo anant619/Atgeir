@@ -40,13 +40,13 @@ except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
 
-def get_RunId():
-    s3 = boto3.resource('s3')
-    obj = s3.Object(bucket, "RunId.json")
-    body = obj.get()['Body'].read().decode('utf-8')
-    config = json.loads(body)
-    RunId = config['RunId']
-    return RunId
+# def get_RunId():
+#     s3 = boto3.resource('s3')
+#     obj = s3.Object(bucket, "RunId.json")
+#     body = obj.get()['Body'].read().decode('utf-8')
+#     config = json.loads(body)
+#     RunId = config['RunId']
+#     return RunId
 
 
 def create_json(data):
