@@ -37,7 +37,7 @@ RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replac
 
 try:
     config = read_config_file(config_dir)
-    pgs-config-bucket = config.get('AWS', 'pgs_config_bucket')
+    pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
     yml_bkt = config.get('AWS', 's3_yml_template_bkt')
     output_bkt = config.get('AWS', 's3_output_bkt')
     aws_access_key_id = config.get('AWS', 'aws_access_key_id')
