@@ -71,7 +71,7 @@ def create_json(data):
             elif i.get('aspectName') == 'datasetProperties' or i.get('aspectName') == 'DatasetProperties':
                 tableMetadata['tags'] = json.loads(i.get('aspect').get('value')).get('tags')
 
-            elif i.get('aspectName') == 'datasetProfile':
+#             elif i.get('aspectName') == 'datasetProfile':
 #                 dataset = json.loads(i.get('aspect').get('value'))
 #                 tableMetadata['rowCount'] = dataset.get('rowCount')
 #                 tableMetadata['columnCount'] = dataset.get('columnCount')
@@ -107,7 +107,7 @@ def create_json(data):
 #         elif "proposedSnapshot" in i.keys():
 #            dataset = i["proposedSnapshot"].get("com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot").get('aspects')
            
-   if len(dataset) > 2:
+    if len(dataset) > 2:
     tableMetadata['tags']  = dataset[1].get('com.linkedin.pegasus2avro.dataset.DatasetProperties').get('tags')
     tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"] =  dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get('schemaName').split('.')
 
