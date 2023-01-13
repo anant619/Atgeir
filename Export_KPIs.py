@@ -20,7 +20,15 @@ def postgre_connect(host, database, user, password):
 #sys.path.append("../")
 config_dir = "./config.properties"  # for ec2
 
+try:
+    config = read_config_file(config_dir)
+    pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
+    aws_access_key_id = config.get('AWS', 'aws_access_key_id')
+    aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
 
+except Exception as ex:
+    print(f"Error code    = {type(ex).__name__}")
+    print(f"Error Message = {ex}")
 s3 = boto3.resource(
         's3',
         aws_access_key_id=aws_access_key_id,
