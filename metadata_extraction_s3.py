@@ -44,8 +44,6 @@ try:
     aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
 #    	metadata-bkt = config.get('AWS', 'metadata_bkt')
 except Exception as ex:
-    # logging.error(f"Error code    = {type(ex).__name__}")
-    # logging.error(f"Error Message = {ex}")
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
 
@@ -153,7 +151,6 @@ def replace_yml(path):
 
 def upload_file(file_path, bucket_name, source, output_file_name):
     try:
-        # s3_client = boto3.client('s3')
         s3_client = boto3.client(
             's3',
             aws_access_key_id=aws_access_key_id,
@@ -169,14 +166,11 @@ def upload_file(file_path, bucket_name, source, output_file_name):
 
 def call_datahub(path):
     try:
-#         script_path = "s3://datahub-sh/datahub_call.sh"  # for ec2
         script_path = "./datahub_call.sh"  # for local
 
         subprocess.call(shlex.split(f"sh {script_path} {path}"))
         print("Metadata script completed...")
     except Exception as ex:
-        # logging.error(f"Error code    = {type(ex).__name__}")
-        # logging.error(f"Error Message = {ex}")
         print(f"Error code    = {type(ex).__name__}")
         print(f"Error Message = {ex}")
 
@@ -212,7 +206,7 @@ def metadata_profiling():
         replace_yml(local_file)
         call_datahub(local_file)
         upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
-        stroe_run_id(output_bkt, RunID)
+#         stroe_run_id(output_bkt, RunID)
         return 'success'
 
 
