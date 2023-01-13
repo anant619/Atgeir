@@ -24,7 +24,7 @@ s3 = boto3.resource(
         's3',
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key)
-    logging.info("login Successful!")
+logging.info("login Successful!")
 print("login Successful")
 
 s3_bucket = s3.Bucket(pgs_config_bucket)
