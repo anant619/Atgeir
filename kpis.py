@@ -48,7 +48,7 @@ def create_json(data):
             if i.get('aspectName') == 'containerProperties':
 #                 data_value = json.loads(i.get('aspect').get('value'))
 #                 Source = data_value.get("customProperties").get("platform")
-                tableMetadata['Source'] = Source
+#                 tableMetadata['Source'] = Source
                 str_timestamp = i.get('systemMetadata').get('lastObserved')
                 timestamp = datetime.datetime.fromtimestamp(str_timestamp/1000)
                 tableMetadata['timestamp'] = str(timestamp).replace('-','').replace(' ','').replace(':','').replace('.','')
