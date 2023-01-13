@@ -5,10 +5,24 @@ import Utilities as utils
 import boto3
 import graph as g
 from neo4j import GraphDatabase
+# sys.path.append("../")
+config_dir = "./config.properties"  # for ec2
+today = date.today()
+current_date = today.strftime("%Y-%m-%d")
 
+try:
+    config = utils.read_config_file(config_dir)
+    URI = config.get('NEO4J', 'uri')
+    username =  config.get('NEO4J', 'username')
+    password = config.get('NEO4J', 'password')
+    database = config.get('NEO4J', 'database')
+except Exception as ex:
+    print(f"Error code    = {type(ex).__name__}")
+    print(f"Error Message = {ex}")
+    
 # URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
-URI = "neo4j://44.204.128.255:7687"
-AUTH = ("neo4j", "sayali@123")
+# URI = "neo4j://44.204.128.255:7687"
+AUTH = (username, password)
 
 with GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
@@ -16,27 +30,23 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
 
 # driver = utils.get_gra8ph_driver("neo4j://44.204.128.255:7474","neo4j","sayali@123")
 
-sys.path.append("../")
-#config_dir = "../configs/config.properties"  # for ec2
-# config_dir = "Metadata_Ingestion/configs/config.properties" # for local
-today = date.today()
-current_date = today.strftime("%Y-%m-%d")
-
 try:
-#     config = utils.read_config_file(config_dir)
-#     bucket = config.get('AWS', 's3_output_bkt')
-      bucket = 'datahub-sh'
+    config = utils.read_config_file(config_dir)
+    bucket = config.get('AWS', 's3_output_bkt')
+    aws_access_key_id = config.get('AWS', 'aws_access_key_id')
+    aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
+      
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
 
-# def get_RunId():
-#     s3 = boto3.resource('s3')
-#     obj = s3.Object(bucket, "RunId.json")
-#     body = obj.get()['Body'].read().decode('utf-8')
-#     config = json.loads(body)
-#     RunId = config['RunId']
-#     return RunId
+def get_RunId():
+    s3 = boto3.resource('s3')
+    obj = s3.Object(bucket, "RunId.json")
+    body = obj.get()['Body'].read().decode('utf-8')
+    config = json.loads(body)
+    RunId = config['RunId']
+    return RunId
 
 
 def create_json(data):
@@ -145,14 +155,13 @@ def create_json(data):
 # s3 = boto3.resource('s3')
 s3 = boto3.resource(
         's3',
-        aws_access_key_id='AKIAVOZRE44NWUEQAAVF',
-        aws_secret_access_key='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'
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key
     )
 # logging.info("login Successful!")
 print("login Successful")
 s3_bucket = s3.Bucket(bucket)
-print(s3_bucket)
-# RunId = get_RunId()
+RunId = get_RunId()
 
 for file in s3_bucket.objects.all():
 #     if str(RunId) in file.key:
@@ -163,7 +172,7 @@ for file in s3_bucket.objects.all():
   try:
       data = json.loads(body)
       table_data = create_json(data)
-      with driver.session(database="neo4j") as session:
+      with driver.session(database=database) as session:
           session.execute_write(g.create_graph, table_data)
   except ValueError as e:
       print ("Json is not valid")
