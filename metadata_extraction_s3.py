@@ -188,9 +188,9 @@ def metadata_profiling():
         aws_secret_access_key=aws_secret_access_key)
     logging.info("login Successful!")
     print("login Successful")
-    s3_bucket = s3.Bucket(pgs-config-bucket)
+    s3_bucket = s3.Bucket(pgs_config_bucket)
     for file in s3_bucket.objects.all():
-        obj = s3.Object(pgs-config-bucket, file.key)
+        obj = s3.Object(pgs_config_bucket, file.key)
         body = obj.get()['Body'].read().decode('utf-8')
         print(obj, body)
         config = json.loads(body)
