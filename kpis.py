@@ -94,7 +94,7 @@ def create_json(data):
 #                     temp_list.append(temp_dict)
 #                 tableMetadata['fieldsData'] = temp_list
             
-            elif i.get('aspectName') == 'datasetUsageStatistics':
+#             elif i.get('aspectName') == 'datasetUsageStatistics':
 #                 datasetUsage.append(json.loads(i.get('aspect').get('value')))
 #             elif i.get('aspectName') == 'operation':
 #                 dataset = json.loads(i.get('aspect').get('value'))
