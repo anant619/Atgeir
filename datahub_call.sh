@@ -8,8 +8,9 @@ then
 	if [ $error_code != 0 ]
 	then
 	       	echo "metadata ingestion has failed.."
-	fi
+	else
 		echo "metadata ingestion Comleted.."
+	fi
 else
     printf "%b" "Argument count incorrect. Stopping processing...\n"
 fi
