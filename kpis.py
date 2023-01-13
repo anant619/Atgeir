@@ -4,8 +4,17 @@ from datetime import date
 import Utilities as utils
 import boto3
 import graph as g
+from neo4j import GraphDatabase
 
-driver = utils.get_graph_driver("neo4j://44.204.128.255:7474","neo4j","sayali@123")
+# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+URI = "neo4j://44.204.128.255:7687"
+AUTH = ("neo4j", "sayali@123")
+
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
+    print("connected")
+
+# driver = utils.get_gra8ph_driver("neo4j://44.204.128.255:7474","neo4j","sayali@123")
 
 sys.path.append("../")
 #config_dir = "../configs/config.properties"  # for ec2
