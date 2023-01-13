@@ -77,21 +77,20 @@ def create_json(data):
                 tableMetadata['columnCount'] = dataset.get('columnCount')
                 tableMetadata['sizeInBytes'] = dataset.get('sizeInBytes')
                 temp_list = []
-#                 print(dataset)
-#                 for field in dataset.get('fieldProfiles'):
-#                     temp_dict = {}
-#                     temp_dict['fieldName'] = field.get('fieldPath') 
-#                     temp_dict['uniqueCount'] = field.get('uniqueCount')
-#                     temp_dict['uniqueProportion'] = field.get('uniqueProportion')
-#                     temp_dict['nullCount'] = field.get('nullCount')
-#                     temp_dict['nullProportion'] = field.get('nullProportion')
-#                     temp_dict['min'] = field.get('min')
-#                     temp_dict['max'] = field.get('max')
-#                     temp_dict['mean'] = field.get('mean')
-#                     temp_dict['median'] =field.get('median')
-#                     temp_dict['distinctValueFrequencies'] = field.get('distinctValueFrequencies')
-#                     temp_dict['sampleValues'] = field.get('sampleValues')
-#                     temp_list.append(temp_dict)
+                for field in dataset.get('fieldProfiles'):
+                    temp_dict = {}
+                    temp_dict['fieldName'] = field.get('fieldPath') 
+                    temp_dict['uniqueCount'] = field.get('uniqueCount')
+                    temp_dict['uniqueProportion'] = field.get('uniqueProportion')
+                    temp_dict['nullCount'] = field.get('nullCount')
+                    temp_dict['nullProportion'] = field.get('nullProportion')
+                    temp_dict['min'] = field.get('min')
+                    temp_dict['max'] = field.get('max')
+                    temp_dict['mean'] = field.get('mean')
+                    temp_dict['median'] =field.get('median')
+                    temp_dict['distinctValueFrequencies'] = field.get('distinctValueFrequencies')
+                    temp_dict['sampleValues'] = field.get('sampleValues')
+                    temp_list.append(temp_dict)
                 tableMetadata['fieldsData'] = temp_list
             
             elif i.get('aspectName') == 'datasetUsageStatistics':
@@ -107,22 +106,22 @@ def create_json(data):
         elif "proposedSnapshot" in i.keys():
            dataset = i["proposedSnapshot"].get("com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot").get('aspects')
            
-    if len(dataset) > 2:
-        tableMetadata['tags']  = dataset[1].get('com.linkedin.pegasus2avro.dataset.DatasetProperties').get('tags')
-        tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"] =  dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get('schemaName').split('.')
-
-        fields = dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get("fields")
-        temp_list = []
-        for field in fields:
-            temp_dict = {}
-            temp_dict['fieldName'] = field.get('fieldPath')
-            temp_dict['dataType'] = field.get('nativeDataType')
-            temp_dict['isNullable'] = field.get('nullable')
-            temp_dict['isPartOfKey'] = field.get('isPartOfKey')
-            temp_dict['recursive'] = field.get('recursive')
-            temp_list.append(temp_dict)
-        tableMetadata['fields'] = temp_list
-
+           if len(dataset) > 2:
+            tableMetadata['tags']  = dataset[1].get('com.linkedin.pegasus2avro.dataset.DatasetProperties').get('tags')
+            tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"] =  dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get('schemaName').split('.')
+     
+            fields = dataset[2].get('com.linkedin.pegasus2avro.schema.SchemaMetadata').get("fields")
+            temp_list = []
+            for field in fields:
+                temp_dict = {}
+                temp_dict['fieldName'] = field.get('fieldPath')
+                temp_dict['dataType'] = field.get('nativeDataType')
+                temp_dict['isNullable'] = field.get('nullable')
+                temp_dict['isPartOfKey'] = field.get('isPartOfKey')
+                temp_dict['recursive'] = field.get('recursive')
+                temp_list.append(temp_dict)
+            tableMetadata['fields'] = temp_list
+                 
     if len(action) > 0:
         tableMetadata['action'] = action
     temp_dict = {}
