@@ -104,8 +104,8 @@ def create_json(data):
 #                 temp_dict['user'] = dataset.get('actor')[16:]
 #                 temp_dict['operationType'] = dataset.get('operationType')
 #                 action.append(temp_dict)
-        elif "proposedSnapshot" in i.keys():
-           dataset = i["proposedSnapshot"].get("com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot").get('aspects')
+#         elif "proposedSnapshot" in i.keys():
+#            dataset = i["proposedSnapshot"].get("com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot").get('aspects')
            
            if len(dataset) > 2:
             tableMetadata['tags']  = dataset[1].get('com.linkedin.pegasus2avro.dataset.DatasetProperties').get('tags')
