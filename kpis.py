@@ -56,7 +56,7 @@ def create_json(data):
         elif i.get('entityType')== 'dataset':
             if i.get('aspectName') == 'schemaMetadata':
 #                 data_value = json.loads(i.get('aspect').get('value'))
-                tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"]= data_value.get('schemaName').split('.')
+#                 tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"]= data_value.get('schemaName').split('.')
 #                 fields = data_value.get('fields')
                 temp_list = []
 #                 for field in fields:
@@ -72,11 +72,11 @@ def create_json(data):
                 tableMetadata['tags'] = json.loads(i.get('aspect').get('value')).get('tags')
 
             elif i.get('aspectName') == 'datasetProfile':
-                dataset = json.loads(i.get('aspect').get('value'))
-                tableMetadata['rowCount'] = dataset.get('rowCount')
-                tableMetadata['columnCount'] = dataset.get('columnCount')
-                tableMetadata['sizeInBytes'] = dataset.get('sizeInBytes')
-                temp_list = []
+#                 dataset = json.loads(i.get('aspect').get('value'))
+#                 tableMetadata['rowCount'] = dataset.get('rowCount')
+#                 tableMetadata['columnCount'] = dataset.get('columnCount')
+#                 tableMetadata['sizeInBytes'] = dataset.get('sizeInBytes')
+#                 temp_list = []
 #                 print(dataset)
 #                 for field in dataset.get('fieldProfiles'):
 #                     temp_dict = {}
@@ -95,15 +95,15 @@ def create_json(data):
 #                 tableMetadata['fieldsData'] = temp_list
             
             elif i.get('aspectName') == 'datasetUsageStatistics':
-                datasetUsage.append(json.loads(i.get('aspect').get('value')))
-            elif i.get('aspectName') == 'operation':
-                dataset = json.loads(i.get('aspect').get('value'))
-                temp_dict = {}
-                timestamp = datetime.datetime.fromtimestamp(dataset.get('lastUpdatedTimestamp')/1000)
-                temp_dict['timestamp'] = str(timestamp)
-                temp_dict['user'] = dataset.get('actor')[16:]
-                temp_dict['operationType'] = dataset.get('operationType')
-                action.append(temp_dict)
+#                 datasetUsage.append(json.loads(i.get('aspect').get('value')))
+#             elif i.get('aspectName') == 'operation':
+#                 dataset = json.loads(i.get('aspect').get('value'))
+#                 temp_dict = {}
+#                 timestamp = datetime.datetime.fromtimestamp(dataset.get('lastUpdatedTimestamp')/1000)
+#                 temp_dict['timestamp'] = str(timestamp)
+#                 temp_dict['user'] = dataset.get('actor')[16:]
+#                 temp_dict['operationType'] = dataset.get('operationType')
+#                 action.append(temp_dict)
         elif "proposedSnapshot" in i.keys():
            dataset = i["proposedSnapshot"].get("com.linkedin.pegasus2avro.metadata.snapshot.DatasetSnapshot").get('aspects')
            
