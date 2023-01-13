@@ -85,8 +85,13 @@ collect( DISTINCT { FieldName:f.name, DataType:f.DataType, IsNullable:f.IsNullab
 """
 
 try:
-    driver = utils.get_graph_driver(
-        "neo4j://localhost:7687", "neo4j", "Abc@1234")
+   # URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+      URI = "neo4j://44.204.128.255:7687"
+      AUTH = ("neo4j", "sayali@123")
+
+      with GraphDatabase.driver(URI, auth=AUTH) as driver:
+          driver.verify_connectivity()
+          print("connected")
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
