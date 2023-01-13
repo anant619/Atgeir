@@ -133,16 +133,27 @@ def create_json(data):
 
     return tableMetadata
 
-s3 = boto3.resource('s3')
+# s3 = boto3.resource('s3')
+s3 = boto3.resource(
+        's3',
+        aws_access_key_id='AKIAVOZRE44NWUEQAAVF',
+        aws_secret_access_key='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'
+    )
+logging.info("login Successful!")
+print("login Successful")
 s3_bucket = s3.Bucket(bucket)
+print(s3_bucket)
 # RunId = get_RunId()
 
 for file in s3_bucket.objects.all():
 #     if str(RunId) in file.key:
   obj = s3.Object(bucket, file.key)
+  print(obj)
   body = obj.get()['Body'].read().decode('utf-8')
+  print(body)
   try:
       data = json.loads(body)
+      print(data)
       table_data = create_json(data)
       with driver.session(database="neo4j") as session:
           session.execute_write(g.create_graph, table_data)
