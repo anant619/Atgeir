@@ -55,19 +55,19 @@ def create_json(data):
                 
         elif i.get('entityType')== 'dataset':
             if i.get('aspectName') == 'schemaMetadata':
-                data_value = json.loads(i.get('aspect').get('value'))
+#                 data_value = json.loads(i.get('aspect').get('value'))
                 tableMetadata["Database_name"],tableMetadata["Schema_name"],tableMetadata["Table_name"]= data_value.get('schemaName').split('.')
-                fields = data_value.get('fields')
+#                 fields = data_value.get('fields')
                 temp_list = []
-                for field in fields:
-                    temp_dict = {}
-                    temp_dict['fieldName'] = field.get('fieldPath')
-                    temp_dict['dataType'] = field.get('nativeDataType')
-                    temp_dict['isNullable'] = field.get('nullable')
-                    temp_dict['isPartOfKey'] = field.get('isPartOfKey')
-                    temp_dict['recursive'] = field.get('recursive')
-                    temp_list.append(temp_dict)
-                tableMetadata['fields'] = temp_list
+#                 for field in fields:
+#                     temp_dict = {}
+#                     temp_dict['fieldName'] = field.get('fieldPath')
+#                     temp_dict['dataType'] = field.get('nativeDataType')
+#                     temp_dict['isNullable'] = field.get('nullable')
+#                     temp_dict['isPartOfKey'] = field.get('isPartOfKey')
+#                     temp_dict['recursive'] = field.get('recursive')
+#                     temp_list.append(temp_dict)
+#                 tableMetadata['fields'] = temp_list
             elif i.get('aspectName') == 'datasetProperties' or i.get('aspectName') == 'DatasetProperties':
                 tableMetadata['tags'] = json.loads(i.get('aspect').get('value')).get('tags')
 
