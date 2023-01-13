@@ -211,8 +211,8 @@ def metadata_profiling():
         local_file, output_path, output_file_name = up_yml(JSONDict)
         replace_yml(local_file)
         call_datahub(local_file)
-        upload_file(output_path, 'datahub-sh', source_type, output_file_name)
-
+        upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
+        stroe_run_id(output_bkt, RunID)
         return 'success'
 
 
