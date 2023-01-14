@@ -84,7 +84,7 @@ collect( DISTINCT { FieldName:f.name, DataType:f.DataType, IsNullable:f.IsNullab
 
 try:
     driver = utils.get_graph_driver(
-        "neo4j://44.204.128.255:7687", "neo4j", "sayali@123")
+        "neo4j://3.90.66.241:7687", "neo4j", "sayali@123")
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
