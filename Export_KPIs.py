@@ -3,88 +3,26 @@ import pandas as pd
 import sys
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
-import boto3
-import logging
-import json
-import psycopg2
 
 
-def create_dataframe(sql, conn):
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    cols = []
-    for elt in cursor.description:
-        cols.append(elt[0])
-    df = pd.DataFrame(data=data, columns=cols)
-    cursor.close()
-    return df
+# sys.path.append("../")
+# # config_dir = "../configs/config.properties"  # for ec2
+# config_dir = "Metadata_Ingestion/configs/config.properties"  # for local
 
-def postgre_connect(host, database, user, password):
-    conn = None
-    try:
-        # connect to the PostgreSQL server
-        conn = psycopg2.connect(host=host,
-                                database=database,
-                                user=user,
-                                password=password)
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    return conn
-    
-#sys.path.append("../")
-config_dir = "./config.properties"  # for ec2
+# try:
+#     config = utils.read_config_file(config_dir)
+#     sf_account = config.get('SNOWFLAKE', 'sf_account')
+#     sf_role = config.get('SNOWFLAKE', 'sf_role')
+#     sf_user = config.get('SNOWFLAKE', 'sf_user')
+#     sf_password = config.get('SNOWFLAKE', 'sf_password')
+#     sf_warehouse = config.get('SNOWFLAKE', 'sf_warehouse')
+#     sf_database = config.get('SNOWFLAKE', 'sf_database')
+#     sf_schema = config.get('SNOWFLAKE', 'sf_schema')
+#     sf_table = config.get('SNOWFLAKE', 'sf_table')
 
-try:
-    config = utils.read_config_file(config_dir)
-    pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
-    aws_access_key_id = config.get('AWS', 'aws_access_key_id')
-    aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
-
-except Exception as ex:
-    print(f"Error code    = {type(ex).__name__}")
-    print(f"Error Message = {ex}")
-s3 = boto3.resource(
-        's3',
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key)
-logging.info("login Successful!")
-print("login Successful")
-
-# s3_bucket = s3.Bucket(pgs_config_bucket)
-
-# for file in s3_bucket.objects.all():
-#     obj = s3.Object(pgs_config_bucket, file.key)
-#     body = obj.get()['Body'].read().decode('utf-8')
-#     print(obj, body)
-#     config = json.loads(body)
-#     logging.info("Successful!")
-#     print("Successful")
-#     source_type = config['source_type']
-#     host = config['host']
-#     username = config['username']
-#     password = config['password']
-#     database = config['database']
-
-#     session = postgre_connect(host, database, username, password)
-#     sf_conn_sql = f"select properties from data_sources where description = 'ML';"
-#     df = create_dataframe(sf_conn_sql, session)
-#     config = df['properties'][0]
-#     new_dict = json.loads(config)
-#     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
- 
-#     sf_account = JSONDict.get('ACCOUNT')
-#     sf_role = JSONDict.get('ROLE')
-#     #sf_user = JSONDict.get('NAME')
-#     sf_user = 'sayali'
-#     #sf_password = JSONDict.get('SNOWFLAKE', 'sf_password')
-#     sf_warehouse = JSONDict.get('WAREHOUSE')
-#     sf_database = JSONDict.get('DATABASE')
-#     sf_schema = JSONDict.get('SCHEMA')
-#     sf_password = 'Atgeir@03'
-#     #sf_table = JSONDict.get('SNOWFLAKE', 'sf_table')
-#     sf_table = 'METADATA_REPORT'
-    
+# except Exception as ex:
+#     print(f"Error code    = {type(ex).__name__}")
+#     print(f"Error Message = {ex}")
 sf_account = 'AFA78268'
 sf_role = 'ACCOUNTADMIN'
 sf_user = 'sayali'
@@ -93,8 +31,6 @@ sf_warehouse = 'HAWKEYE_WH'
 sf_database = 'DATAGEIR_HAWKEYE_DEV'
 sf_schema = 'HAWKEYE_APP'
 sf_table = 'METADATA_REPORT'
-
-print(sf_table)
 
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     # try:
@@ -106,35 +42,49 @@ def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     snow.close()
     return status, nchunks, nrows
 
+    # except Exception as ex:
+    #     print("Snowflake SQL Failed")
+    #     print(f"Error code    = {type(ex).__name__}")
+    #     print(f"Error Message = {ex}")
+
+
 query_string = """
 MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:HAS_FIELDS]->(f:FIELD)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:Table_RowCount]->(rc:Rows)
+
 // For ColumnCount
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:Table_ColumnCount]->(tc:ColumnCount)
+
 // For tags
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]-(r:RunId)-[:HAS_TAGS]->(tg:Tag)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:SizeInBytes]->(sib:Size)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:HAS_FIELDS]->(f:FIELD)-[:Columns_Details]->(cd:Details)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:HAS_FIELDS]->(f:FIELD)-[:Field_DistinctValue]->(fdv:DistinctValue)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:operation_performed]->(act:Action) WHERE act.OperationType = 'CREATE'
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:operation_performed]->(action:Action)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:HAS_FIELDS]->(f:FIELD)-[:User_Usage]->(uuc:User_Usage_Count)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:HAS_FIELDS]->(f:FIELD)-[:USAGE_COUNT]->(uc:Count)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:Total_Queries_Executed]->(tqc:Total_Queries_Count)
+
 OPTIONAL MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:Top_Queries]->(tpq:TopQueries)
+
 RETURN src.name as SOURCE, n.name as Database,m.name AS Schema ,t.name AS Table, r.name AS RunId, rc.RowCount AS RowCount, tc.ColumnCount as ColumnCount, tg.tags AS Tags,sib.SizeInBytes AS SizeInBytes, act.User as Created_by,act.Timestamp AS CreationTimestamp , uuc.user_count AS UniqueUserUsageCount,tqc.query_count AS TotalQueriesCount,
 collect( DISTINCT { FieldName:f.name, DataType:f.DataType, IsNullable:f.IsNullable, IsPartOfKey:f.IsPartOfKey, Recursive:f.Recursive, UsageCount:uc.count ,Field_DistinctValues: {Value:fdv.Value, Frequency: fdv.Frequency}, FieldValueDetails:{UniqueValueCount: cd.UniqueCount, UniqueValueProportion: cd.UniqueProportion, NullValueCount: cd.nullCount, NullValueProportion:cd.nullProportion, MinValue:cd.Min, MaxValue: cd.Max, MeanValue: cd.Mean, MedianValue: cd.Median, sampleValues: cd.sampleValues } }) as FieldDetails
 ,collect(DISTINCT {  Operation: action.OperationType, PerformedBy: action.User, Timestamp:action.Timestamp}) as Action, collect ( DISTINCT {TopQueries:tpq.Queries }) AS TopQueries
 """
 
 try:
-      config = utils.read_config_file(config_dir)
-      URI = config.get('NEO4J', 'uri')
-      username =  config.get('NEO4J', 'username')
-      password = config.get('NEO4J', 'password')
-      database = config.get('NEO4J', 'database')
-      driver = utils.get_graph_driver(URI, username,password)
-
+    driver = utils.get_graph_driver(
+        "neo4j://44.204.128.255:7687", "neo4j", "sayali@123")
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
