@@ -12,7 +12,8 @@ current_date = today.strftime("%Y-%m-%d")
 
 try:
     config = utils.read_config_file(config_dir)
-    URI = config.get('NEO4J', 'uri')
+#     URI = config.get('NEO4J', 'uri')
+    URI = "neo4j://3.90.66.241:7687"
     username =  config.get('NEO4J', 'username')
     password = config.get('NEO4J', 'password')
     database = config.get('NEO4J', 'database')
