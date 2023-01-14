@@ -172,7 +172,7 @@ for file in s3_bucket.objects.all():
   try:
       data = json.loads(body)
       table_data = create_json(data)
-      with driver.session(database=database) as session:
+      with driver.session(database="system") as session:
           session.execute_write(g.create_graph, table_data)
   except ValueError as e:
       print ("Json is not valid")
