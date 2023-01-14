@@ -6,8 +6,8 @@ from snowflake.connector.pandas_tools import write_pandas
 
 
 sys.path.append("../")
-# config_dir = "../configs/config.properties"  # for ec2
-config_dir = "Metadata_Ingestion/configs/config.properties"  # for local
+config_dir = "./config.properties"  # for ec2
+# config_dir = "Metadata_Ingestion/configs/config.properties"  # for local
 
 try:
 #     config = utils.read_config_file(config_dir)
