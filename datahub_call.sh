@@ -1,3 +1,4 @@
+#!/bin/sh
 input_args=$#
 
 if [ $input_args -eq  1 ]
