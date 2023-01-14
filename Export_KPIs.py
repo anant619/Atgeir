@@ -94,6 +94,8 @@ sf_database = 'DATAGEIR_HAWKEYE_DEV'
 sf_schema = 'HAWKEYE_APP'
 sf_table = 'METADATA_REPORT'
 
+print(sf_table)
+
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     # try:
     # execute the command
