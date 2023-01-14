@@ -3,36 +3,96 @@ import pandas as pd
 import sys
 import snowflake.connector
 from snowflake.connector.pandas_tools import write_pandas
+import boto3
+import logging
+import json
+import psycopg2
 
 
-# sys.path.append("../")
+def create_dataframe(sql, conn):
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    cols = []
+    for elt in cursor.description:
+        cols.append(elt[0])
+    df = pd.DataFrame(data=data, columns=cols)
+    cursor.close()
+    return df
+
+def postgre_connect(host, database, user, password):
+    conn = None
+    try:
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(host=host,
+                                database=database,
+                                user=user,
+                                password=password)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    return conn
+    
+#sys.path.append("../")
 config_dir = "./config.properties"  # for ec2
-# config_dir = "Metadata_Ingestion/configs/config.properties"  # for local
 
 try:
-#     config = utils.read_config_file(config_dir)
-#     sf_account = config.get('SNOWFLAKE', 'sf_account')
-#     sf_role = config.get('SNOWFLAKE', 'sf_role')
-#     sf_user = config.get('SNOWFLAKE', 'sf_user')
-#     sf_password = config.get('SNOWFLAKE', 'sf_password')
-#     sf_warehouse = config.get('SNOWFLAKE', 'sf_warehouse')
-#     sf_database = config.get('SNOWFLAKE', 'sf_database')
-#     sf_schema = config.get('SNOWFLAKE', 'sf_schema')
-#     sf_table = config.get('SNOWFLAKE', 'sf_table')
+    config = utils.read_config_file(config_dir)
+    pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
+    aws_access_key_id = config.get('AWS', 'aws_access_key_id')
+    aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
 
-
-      sf_account = 'AFA78268'
-      sf_role = 'ACCOUNTADMIN'
-      sf_user = 'sayali'
-      sf_password = 'Atgeir@03'
-      sf_warehouse = 'HAWKEYE_WH'
-      sf_database = 'DATAGEIR_HAWKEYE_DEV'
-      sf_schema = 'HAWKEYE_APP'
-      sf_table = 'METADATA_REPORT'
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
+s3 = boto3.resource(
+        's3',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key)
+logging.info("login Successful!")
+print("login Successful")
 
+s3_bucket = s3.Bucket(pgs_config_bucket)
+
+for file in s3_bucket.objects.all():
+#     obj = s3.Object(pgs_config_bucket, file.key)
+#     body = obj.get()['Body'].read().decode('utf-8')
+#     print(obj, body)
+#     config = json.loads(body)
+#     logging.info("Successful!")
+#     print("Successful")
+#     source_type = config['source_type']
+#     host = config['host']
+#     username = config['username']
+#     password = config['password']
+#     database = config['database']
+
+#     session = postgre_connect(host, database, username, password)
+#     sf_conn_sql = f"select properties from data_sources where description = 'ML';"
+#     df = create_dataframe(sf_conn_sql, session)
+#     config = df['properties'][0]
+#     new_dict = json.loads(config)
+#     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+ 
+#     sf_account = JSONDict.get('ACCOUNT')
+#     sf_role = JSONDict.get('ROLE')
+#     #sf_user = JSONDict.get('NAME')
+#     sf_user = 'sayali'
+#     #sf_password = JSONDict.get('SNOWFLAKE', 'sf_password')
+#     sf_warehouse = JSONDict.get('WAREHOUSE')
+#     sf_database = JSONDict.get('DATABASE')
+#     sf_schema = JSONDict.get('SCHEMA')
+#     sf_password = 'Atgeir@03'
+#     #sf_table = JSONDict.get('SNOWFLAKE', 'sf_table')
+#     sf_table = 'METADATA_REPORT'
+    
+    sf_account = 'AFA78268'
+    sf_role = 'ACCOUNTADMIN'
+    sf_user = 'sayali'
+    sf_password = 'Atgeir@03'
+    sf_warehouse = 'HAWKEYE_WH'
+    sf_database = 'DATAGEIR_HAWKEYE_DEV'
+    sf_schema = 'HAWKEYE_APP'
+    sf_table = 'METADATA_REPORT'
 
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     # try:
@@ -43,12 +103,6 @@ def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     print(status, nchunks, nrows)
     snow.close()
     return status, nchunks, nrows
-
-    # except Exception as ex:
-    #     print("Snowflake SQL Failed")
-    #     print(f"Error code    = {type(ex).__name__}")
-    #     print(f"Error Message = {ex}")
-
 
 query_string = """
 MATCH (src:Source)-[:has_Database]->(n:Database)-[:has_schema]->(m:SCHEMA)-[:has_table]->(t:TABLE)-[:RunId]->(r:RunId)-[:HAS_FIELDS]->(f:FIELD)
@@ -72,15 +126,13 @@ collect( DISTINCT { FieldName:f.name, DataType:f.DataType, IsNullable:f.IsNullab
 """
 
 try:
-      driver = utils.get_graph_driver(
-        "neo4j://44.204.128.255:7687", "neo4j", "sayali@123")
-   # URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
-#       URI = "neo4j://44.204.128.255:7687"
-#       AUTH = ("neo4j", "sayali@123")
+      config = utils.read_config_file(config_dir)
+      URI = config.get('NEO4J', 'uri')
+      username =  config.get('NEO4J', 'username')
+      password = config.get('NEO4J', 'password')
+      database = config.get('NEO4J', 'database')
+      driver = utils.get_graph_driver(URI, username,password)
 
-#       with GraphDatabase.driver(URI, auth=AUTH) as driver:
-#           driver.verify_connectivity()
-#           print("connected")
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
@@ -106,5 +158,3 @@ try:
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
-    
-    
