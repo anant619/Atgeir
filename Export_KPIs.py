@@ -53,7 +53,7 @@ print("login Successful")
 
 s3_bucket = s3.Bucket(pgs_config_bucket)
 
-for file in s3_bucket.objects.all():
+# for file in s3_bucket.objects.all():
 #     obj = s3.Object(pgs_config_bucket, file.key)
 #     body = obj.get()['Body'].read().decode('utf-8')
 #     print(obj, body)
@@ -85,14 +85,14 @@ for file in s3_bucket.objects.all():
 #     #sf_table = JSONDict.get('SNOWFLAKE', 'sf_table')
 #     sf_table = 'METADATA_REPORT'
     
-    sf_account = 'AFA78268'
-    sf_role = 'ACCOUNTADMIN'
-    sf_user = 'sayali'
-    sf_password = 'Atgeir@03'
-    sf_warehouse = 'HAWKEYE_WH'
-    sf_database = 'DATAGEIR_HAWKEYE_DEV'
-    sf_schema = 'HAWKEYE_APP'
-    sf_table = 'METADATA_REPORT'
+sf_account = 'AFA78268'
+sf_role = 'ACCOUNTADMIN'
+sf_user = 'sayali'
+sf_password = 'Atgeir@03'
+sf_warehouse = 'HAWKEYE_WH'
+sf_database = 'DATAGEIR_HAWKEYE_DEV'
+sf_schema = 'HAWKEYE_APP'
+sf_table = 'METADATA_REPORT'
 
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     # try:
