@@ -25,7 +25,8 @@ try:
     bucket = config.get('AWS', 's3_output_bkt')
     aws_access_key_id = config.get('AWS', 'aws_access_key_id')
     aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
-      
+    pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
+
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
