@@ -6,6 +6,7 @@ from snowflake.connector.pandas_tools import write_pandas
 import boto3 
 import logging
 import json
+import psycopg2
 
 def postgre_connect(host, database, user, password):
     conn = None
