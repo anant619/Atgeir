@@ -57,7 +57,7 @@ for file in s3_bucket.objects.all():
 
     session = postgre_connect(host, database, username, password)
     sf_conn_sql = f"select properties from data_sources where description = 'ML';"
-    df = create_dataframe(sf_conn_sql, session)
+    df = utils.create_dataframe(sf_conn_sql, session)
     config = df['properties'][0]
     new_dict = json.loads(config)
     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
