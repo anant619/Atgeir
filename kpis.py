@@ -10,24 +10,24 @@ config_dir = "./config.properties"  # for ec2
 today = date.today()
 current_date = today.strftime("%Y-%m-%d")
 
-try:
-    config = utils.read_config_file(config_dir)
-#     URI = config.get('NEO4J', 'uri')
-    URI = "neo4j://3.231.31.2:7687"
-    username =  config.get('NEO4J', 'username')
-    password = config.get('NEO4J', 'password')
-    database = config.get('NEO4J', 'database')
-except Exception as ex:
-    print(f"Error code    = {type(ex).__name__}")
-    print(f"Error Message = {ex}")
+# try:
+#     config = utils.read_config_file(config_dir)
+# #     URI = config.get('NEO4J', 'uri')
+#     URI = "neo4j://3.231.31.2:7687"
+#     username =  config.get('NEO4J', 'username')
+#     password = config.get('NEO4J', 'password')
+#     database = config.get('NEO4J', 'database')
+# except Exception as ex:
+#     print(f"Error code    = {type(ex).__name__}")
+#     print(f"Error Message = {ex}")
     
-# URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
-# URI = "neo4j://44.204.128.255:7687"
-AUTH = (username, password)
+# # URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
+# # URI = "neo4j://44.204.128.255:7687"
+# AUTH = (username, password)
 
-with GraphDatabase.driver(URI, auth=AUTH) as driver:
-    driver.verify_connectivity()
-    print("connected")
+# with GraphDatabase.driver(URI, auth=AUTH) as driver:
+#     driver.verify_connectivity()
+#     print("connected")
 
 # driver = utils.get_gra8ph_driver("neo4j://44.204.128.255:7474","neo4j","sayali@123")
 
