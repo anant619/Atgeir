@@ -4,7 +4,7 @@ from datetime import date
 from datetime import datetime
 import Utilities as utils
 import boto3
-import pd
+import pandas as pd
 import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
