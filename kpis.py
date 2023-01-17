@@ -206,6 +206,8 @@ for file in s3_bucket.objects.all():
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (SOURCE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME,'UNIQUEUSERUSAGECOUNT', 'TOTALQUERIESCOUNT', 'FIELDDETAILS') VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
+          print(snow)
+
 #           session.sql(insert_sql).collect()
 # #           print(table_data)
 #           
@@ -216,7 +218,6 @@ for file in s3_bucket.objects.all():
 #           table_data = "./test_data.json"
 #           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
            
-           print(snow)
       except ValueError as e:
           print ("Json is not valid")
 
