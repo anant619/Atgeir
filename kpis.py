@@ -187,6 +187,8 @@ for file in s3_bucket.objects.all():
           source_type = "snowflake"
           table_data = "./test_data.json"
           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
+          source = table_data.get('source')
+          print(source)
       except ValueError as e:
           print ("Json is not valid")
 
