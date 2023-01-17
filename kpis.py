@@ -17,6 +17,19 @@ today = date.today()
 timestamp = datetime.now()
 RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
 
+CONNECTION_PARAMETERS = {
+"accounturl": sf_account_url,
+"account": "AFA78268,
+"user": 'sayali',
+"privatekey": sf_privatekey,
+"password": 'Atgeir@03',
+"database": 'DATAGEIR_HAWKEYE_DEV',
+"schema": 'HAWKEYE_APP',
+"warehouse": 'HAWKEYE_WH',
+"role": 'ACCOUNTADMIN'
+}
+session = Session.builder.configs(CONNECTION_PARAMETERS).create()
+
 # try:
 #     config = utils.read_config_file(config_dir)
 # #     URI = config.get('NEO4J', 'uri')
@@ -188,9 +201,9 @@ for file in s3_bucket.objects.all():
           uniqueUserCount = table_data.get('uniqueUserCount')
           fields = table_data.get('fields')
           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (SOURCE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME,'UNIQUEUSERUSAGECOUNT', 'TOTALQUERIESCOUNT', 'FIELDDETAILS') VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
-          snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-          snow.collect()
-          print(table_data)
+#           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
+          session.sql(insert_sql).collect()
+#           print(table_data)
 #           
 #           with open('test_data.json', 'w') as f:
 #             json.dump(table_data,f)
