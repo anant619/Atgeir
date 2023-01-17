@@ -180,8 +180,11 @@ for file in s3_bucket.objects.all():
           data = json.loads(body)
           table_data = create_json(data)
           print(table_data)
-          output_file_name = "test_data.json"
+          with open("test_data.json", "wb") as f:
+            f.write(table_data.encode())
+          output_file_name = "test_data_final.json"
           source_type = "snowflake"
+          table_data = "./test_data.json"
           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
     #       with driver.session(database=database) as session:
     #           session.execute_write(g.create_graph, table_data)
