@@ -115,7 +115,7 @@ def create_json(data):
             elif i.get('aspectName') == 'operation':
                 dataset = json.loads(i.get('aspect').get('value'))
                 temp_dict = {}
-                timestamp = datetime.datetime.fromtimestamp(dataset.get('lastUpdatedTimestamp')/1000)
+                timestamp = datetime.fromtimestamp(dataset.get('lastUpdatedTimestamp')/1000)
                 temp_dict['timestamp'] = str(timestamp)
                 temp_dict['user'] = dataset.get('actor')[16:]
                 temp_dict['operationType'] = dataset.get('operationType')
