@@ -8,6 +8,7 @@ import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
 from snowflake.snowpark import Session
+import snowflake.connector
 import json
 # sys.path.append("../")
 config_dir = "./config.properties"  # for ec2
