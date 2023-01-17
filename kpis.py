@@ -10,6 +10,10 @@ config_dir = "./config.properties"  # for ec2
 today = date.today()
 current_date = today.strftime("%Y-%m-%d")
 
+today = date.today()
+timestamp = datetime.now()
+RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
+
 # try:
 #     config = utils.read_config_file(config_dir)
 # #     URI = config.get('NEO4J', 'uri')
@@ -41,13 +45,13 @@ except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
 
-# def get_RunId():
-#     s3 = boto3.resource('s3')
-#     obj = s3.Object(bucket, "RunId.json")
-#     body = obj.get()['Body'].read().decode('utf-8')
-#     config = json.loads(body)
-#     RunId = config['RunId']
-#     return RunId
+def get_RunId():
+    s3 = boto3.resource('s3')
+    obj = s3.Object(bucket, "RunId.json")
+    body = obj.get()['Body'].read().decode('utf-8')
+    config = json.loads(body)
+    RunId = config['RunId']
+    return RunId
 
 
 def create_json(data):
@@ -162,21 +166,23 @@ s3 = boto3.resource(
 # logging.info("login Successful!")
 print("login Successful")
 s3_bucket = s3.Bucket(bucket)
-# RunId = get_RunId()
+RunId = get_RunId()
 
 for file in s3_bucket.objects.all():
-#     if str(RunId) in file.key:
-  obj = s3.Object(bucket, file.key)
-  print(obj)
-  body = obj.get()['Body'].read().decode('utf-8')
-  print(body)
-  try:
-      data = json.loads(body)
-      table_data = create_json(data)
-      print(table_data)
-#       with driver.session(database=database) as session:
-#           session.execute_write(g.create_graph, table_data)
-  except ValueError as e:
-      print ("Json is not valid")
+    if str(RunId) in file.key:
+      obj = s3.Object(bucket, file.key)
+      print(obj)
+      body = obj.get()['Body'].read().decode('utf-8')
+      print(body)
+      try:
+          data = json.loads(body)
+          table_data = create_json(data)
+          print(table_data)
+          output_file_name = "test_data.json"
+          upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
+    #       with driver.session(database=database) as session:
+    #           session.execute_write(g.create_graph, table_data)
+      except ValueError as e:
+          print ("Json is not valid")
 
 driver.close()
