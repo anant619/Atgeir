@@ -3,7 +3,7 @@ numpy
 pandas
 psycopg2
 pyyaml
-acryl-datahub[snowflake]
+acryl-datahub[snowflake]==0.9.3
 psycopg2-binary
 neo4j
 pyarrow
