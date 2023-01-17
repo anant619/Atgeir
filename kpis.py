@@ -6,6 +6,7 @@ import Utilities as utils
 import boto3
 import graph as g
 from neo4j import GraphDatabase
+from datetime import timedelta
 # sys.path.append("../")
 config_dir = "./config.properties"  # for ec2
 today = date.today()
@@ -66,7 +67,7 @@ def create_json(data):
                 Source = data_value.get("customProperties").get("platform")
                 tableMetadata['Source'] = Source
                 str_timestamp = i.get('systemMetadata').get('lastObserved')
-                timestamp = datetime.datetime.fromtimestamp(str_timestamp/1000)
+                timestamp = datetime.fromtimestamp(str_timestamp/1000)
                 tableMetadata['timestamp'] = str(timestamp).replace('-','').replace(' ','').replace(':','').replace('.','')
                 
         elif i.get('entityType')== 'dataset':
