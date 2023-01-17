@@ -216,7 +216,7 @@ for file in s3_bucket.objects.all():
 #           table_data = "./test_data.json"
 #           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
            
-            print(snow)
+           print(snow)
       except ValueError as e:
           print ("Json is not valid")
 
