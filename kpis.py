@@ -1,7 +1,7 @@
 import datetime,sys
 import json
 from datetime import date
-import datetime
+from datetime import datetime
 import Utilities as utils
 import boto3
 import graph as g
