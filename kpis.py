@@ -181,7 +181,16 @@ for file in s3_bucket.objects.all():
           data = json.loads(body)
           table_data = create_json(data)
           source = table_data.get('Source')
-         
+          Database_name = table_data.get('Database_name')
+          Schema_name = table_data.get('Schema_name')
+          Table_name = table_data.get('Table_name')
+          totalSqlQueriesCount = table_data.get('totalSqlQueriesCount')
+          uniqueUserCount = table_data.get('uniqueUserCount')
+          fields = table_data.get('fields')
+          insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (SOURCE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME,'UNIQUEUSERUSAGECOUNT', 'TOTALQUERIESCOUNT', 'FIELDDETAILS') VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
+          snow = utils.snow_connect(sf_account, sf_user, sf_password,
+                            sf_role, sf_warehouse, sf_database, sf_schema)
+          session.sql(insert_sql).collect()
           print(table_data)
 #           
 #           with open('test_data.json', 'w') as f:
