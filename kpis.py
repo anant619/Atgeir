@@ -21,7 +21,7 @@ CONNECTION_PARAMETERS = {
 
 "account": 'AFA78268',
 "user": 'sayali',
-"privatekey": sf_privatekey,
+
 "password": 'Atgeir@03',
 "database": 'DATAGEIR_HAWKEYE_DEV',
 "schema": 'HAWKEYE_APP',
