@@ -19,7 +19,7 @@ RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replac
 
 CONNECTION_PARAMETERS = {
 "accounturl": sf_account_url,
-"account": "AFA78268,
+"account": 'AFA78268',
 "user": 'sayali',
 "privatekey": sf_privatekey,
 "password": 'Atgeir@03',
