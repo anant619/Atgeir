@@ -202,12 +202,15 @@ for file in s3_bucket.objects.all():
           totalSqlQueriesCount = table_data.get('totalSqlQueriesCount')
           uniqueUserCount = table_data.get('uniqueUserCount')
           fields = table_data.get('fields')
-         
+          data = [source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields]
+          df = pd.DataFrame(data)
+
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (SOURCE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME,'UNIQUEUSERUSAGECOUNT', 'TOTALQUERIESCOUNT', 'FIELDDETAILS') VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
           print(snow)
-          snow.sql(insert_sql).collect()
+#           snow.sql(insert_sql).collect()
+          utils.load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
           
 
 #           session.sql(insert_sql).collect()
