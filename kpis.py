@@ -181,7 +181,7 @@ for file in s3_bucket.objects.all():
           data = json.loads(body)
           table_data = create_json(data)
           print(table_data)
-          with open("test_data.json", "wb") as f:
+          with open('test_data.json', 'w') as f:
             json.dump(table_data,f)
           output_file_name = "test_data_final.json"
           source_type = "snowflake"
