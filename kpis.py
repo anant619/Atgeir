@@ -7,8 +7,8 @@ import boto3
 import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
-from snowflake.snowpark import Session
-import snowflake.connector
+# from snowflake.snowpark import Session
+# import snowflake.connector
 import json
 # sys.path.append("../")
 config_dir = "./config.properties"  # for ec2
@@ -19,18 +19,18 @@ today = date.today()
 timestamp = datetime.now()
 RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
 
-CONNECTION_PARAMETERS = {
+# CONNECTION_PARAMETERS = {
 
-"account": 'AFA78268',
-"user": 'sayali',
+# "account": 'AFA78268',
+# "user": 'sayali',
 
-"password": 'Atgeir@03',
-"database": 'DATAGEIR_HAWKEYE_DEV',
-"schema": 'HAWKEYE_APP',
-"warehouse": 'HAWKEYE_WH',
-"role": 'ACCOUNTADMIN'
-}
-session = Session.builder.configs(CONNECTION_PARAMETERS).create()
+# "password": 'Atgeir@03',
+# "database": 'DATAGEIR_HAWKEYE_DEV',
+# "schema": 'HAWKEYE_APP',
+# "warehouse": 'HAWKEYE_WH',
+# "role": 'ACCOUNTADMIN'
+# }
+# session = Session.builder.configs(CONNECTION_PARAMETERS).create()
 
 # try:
 #     config = utils.read_config_file(config_dir)
