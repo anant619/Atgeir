@@ -7,6 +7,7 @@ import boto3
 import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
+import json
 # sys.path.append("../")
 config_dir = "./config.properties"  # for ec2
 today = date.today()
@@ -181,7 +182,7 @@ for file in s3_bucket.objects.all():
           table_data = create_json(data)
           print(table_data)
           with open("test_data.json", "wb") as f:
-            f.write(bytes(table_data),'utf-8')
+            json.dump(table_data,f)
           output_file_name = "test_data_final.json"
           source_type = "snowflake"
           table_data = "./test_data.json"
