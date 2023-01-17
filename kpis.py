@@ -181,7 +181,7 @@ for file in s3_bucket.objects.all():
           table_data = create_json(data)
           print(table_data)
           output_file_name = "test_data.json"
-          upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
+          utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
     #       with driver.session(database=database) as session:
     #           session.execute_write(g.create_graph, table_data)
       except ValueError as e:
