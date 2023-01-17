@@ -20,15 +20,6 @@ today = date.today()
 timestamp = datetime.now()
 RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
 
-def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
-    # try:
-    # execute the command
-    print("Loading Data Frame")
-    status, nchunks, nrows, _ = write_pandas(
-        conn=snow, df=csv_df, table_name=tablename, schema=schemaname, quote_identifiers="False")
-    print(status, nchunks, nrows)
-    snow.close()
-    return status, nchunks, nrows
 # CONNECTION_PARAMETERS = {
 
 # "account": 'AFA78268',
@@ -217,15 +208,9 @@ for file in s3_bucket.objects.all():
 
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (SOURCE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME,'UNIQUEUSERUSAGECOUNT', 'TOTALQUERIESCOUNT', 'FIELDDETAILS') VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
-          snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-          print(snow)
+#           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
 #           snow.sql(insert_sql).collect()
-          load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
           
-
-#           session.sql(insert_sql).collect()
-# #           print(table_data)
-#           
 #           with open('test_data.json', 'w') as f:
 #             json.dump(table_data,f)
 #           output_file_name = "test_data_final.json"
