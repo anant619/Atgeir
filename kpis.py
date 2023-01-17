@@ -180,7 +180,7 @@ for file in s3_bucket.objects.all():
       try:
           data = json.loads(body)
           table_data = create_json(data)
-          source = table_data.get('source')
+          source = table_data.get('Source')
           print(source)
 #           print(type(table_data))
 #           
