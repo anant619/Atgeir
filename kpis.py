@@ -219,9 +219,9 @@ for file in s3_bucket.objects.all():
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
           timestamp = table_data.get('timestamp')
-          timestamp = datetime.fromtimestamp(int(timestamp))
+#           timestamp = datetime.fromtimestamp(int(timestamp))
 
-          print(type(fielddetails),action)
+#           print(type(fielddetails),action)
          
 #           data = [source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields]
 #           df = pd.DataFrame(data)
