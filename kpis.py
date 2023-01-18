@@ -237,7 +237,8 @@ for file in s3_bucket.objects.all():
 
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
-          load_timestamp = pd.Timestamp(np.datetime64[ns])
+          load_timestamp = pd.datetime.now().astype('datetime64[ns]')
+#           load_timestamp = pd.Timestamp(np.datetime64[ns])
           
           print(load_timestamp)
 #           timestamp = table_data.get('timestamp')
