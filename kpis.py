@@ -99,6 +99,7 @@ def create_json(data):
     action = []
     for i in data:
         print(type(i),i)
+        sys.exit(0)
         if i.get('entityType')== "container":
             if i.get('aspectName') == 'containerProperties':
                 data_value = json.loads(i.get('aspect').get('value'))
