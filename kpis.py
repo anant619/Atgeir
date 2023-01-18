@@ -10,51 +10,14 @@ from neo4j import GraphDatabase
 from datetime import timedelta
 import numpy as np
 from snowflake.connector.pandas_tools import write_pandas
-# from snowflake.snowpark import Session
-# import snowflake.connector
 import json
-# sys.path.append("../")
-config_dir = "./config.properties"  # for ec2
+config_dir = "./config.properties"  
 today = date.today()
 current_date = today.strftime("%Y-%m-%d")
 
 today = date.today()
 timestamp = datetime.now()
 RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
-
-# CONNECTION_PARAMETERS = {
-
-# "account": 'AFA78268',
-# "user": 'sayali',
-
-# "password": 'Atgeir@03',
-# "database": 'DATAGEIR_HAWKEYE_DEV',
-# "schema": 'HAWKEYE_APP',
-# "warehouse": 'HAWKEYE_WH',
-# "role": 'ACCOUNTADMIN'
-# }
-# session = Session.builder.configs(CONNECTION_PARAMETERS).create()
-
-# try:
-#     config = utils.read_config_file(config_dir)
-# #     URI = config.get('NEO4J', 'uri')
-#     URI = "neo4j://3.231.31.2:7687"
-#     username =  config.get('NEO4J', 'username')
-#     password = config.get('NEO4J', 'password')
-#     database = config.get('NEO4J', 'database')
-# except Exception as ex:
-#     print(f"Error code    = {type(ex).__name__}")
-#     print(f"Error Message = {ex}")
-    
-# # URI examples: "neo4j://localhost", "neo4j+s://xxx.databases.neo4j.io"
-# # URI = "neo4j://44.204.128.255:7687"
-# AUTH = (username, password)
-
-# with GraphDatabase.driver(URI, auth=AUTH) as driver:
-#     driver.verify_connectivity()
-#     print("connected")
-
-# driver = utils.get_gra8ph_driver("neo4j://44.204.128.255:7474","neo4j","sayali@123")
 
 try:
     config = utils.read_config_file(config_dir)
@@ -113,20 +76,20 @@ def create_json(data):
                 tableMetadata['columnCount'] = dataset.get('columnCount')
                 tableMetadata['sizeInBytes'] = dataset.get('sizeInBytes')
                 temp_list = []
-#                 for field in dataset.get('fieldProfiles'):
-#                     temp_dict = {}
-#                     temp_dict['fieldName'] = field.get('fieldPath') 
-#                     temp_dict['uniqueCount'] = field.get('uniqueCount')
-#                     temp_dict['uniqueProportion'] = field.get('uniqueProportion')
-#                     temp_dict['nullCount'] = field.get('nullCount')
-#                     temp_dict['nullProportion'] = field.get('nullProportion')
-#                     temp_dict['min'] = field.get('min')
-#                     temp_dict['max'] = field.get('max')
-#                     temp_dict['mean'] = field.get('mean')
-#                     temp_dict['median'] =field.get('median')
-#                     temp_dict['distinctValueFrequencies'] = field.get('distinctValueFrequencies')
-#                     temp_dict['sampleValues'] = field.get('sampleValues')
-#                     temp_list.append(temp_dict)
+                for field in dataset.get('fieldProfiles'):
+                    temp_dict = {}
+                    temp_dict['fieldName'] = field.get('fieldPath') 
+                    temp_dict['uniqueCount'] = field.get('uniqueCount')
+                    temp_dict['uniqueProportion'] = field.get('uniqueProportion')
+                    temp_dict['nullCount'] = field.get('nullCount')
+                    temp_dict['nullProportion'] = field.get('nullProportion')
+                    temp_dict['min'] = field.get('min')
+                    temp_dict['max'] = field.get('max')
+                    temp_dict['mean'] = field.get('mean')
+                    temp_dict['median'] =field.get('median')
+                    temp_dict['distinctValueFrequencies'] = field.get('distinctValueFrequencies')
+                    temp_dict['sampleValues'] = field.get('sampleValues')
+                    temp_list.append(temp_dict)
                 tableMetadata['fieldsData'] = temp_list
             
             elif i.get('aspectName') == 'datasetUsageStatistics':
@@ -191,8 +154,6 @@ class NpEncoder(json.JSONEncoder):
             return bool(obj)
         return json.JSONEncoder.default(self, obj)
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
-    # try:
-    # execute the command
     print("Loading Data Frame")
     status, nchunks, nrows, _ = write_pandas(
         conn=snow, df=csv_df, table_name=tablename, schema=schemaname, quote_identifiers="False")
@@ -200,13 +161,11 @@ def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     snow.close()
     return status, nchunks, nrows
 
-# s3 = boto3.resource('s3')
 s3 = boto3.resource(
         's3',
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key
     )
-# logging.info("login Successful!")
 print("login Successful")
 s3_bucket = s3.Bucket(bucket)
 RunId = get_RunId()
