@@ -8,7 +8,7 @@ import pandas as pd
 import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
-import numpy
+import numpy as np
 from snowflake.connector.pandas_tools import write_pandas
 # from snowflake.snowpark import Session
 # import snowflake.connector
@@ -237,7 +237,7 @@ for file in s3_bucket.objects.all():
 
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
-          load_timestamp = numpy.datetime.now()
+          load_timestamp = pd.Timestamp(np.datetime64[ns])
           
           print(load_timestamp)
 #           timestamp = table_data.get('timestamp')
