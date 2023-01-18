@@ -98,6 +98,7 @@ def create_json(data):
     datasetUsage = []
     action = []
     for i in data:
+        print(type(i),i)
         if i.get('entityType')== "container":
             if i.get('aspectName') == 'containerProperties':
                 data_value = json.loads(i.get('aspect').get('value'))
@@ -230,12 +231,12 @@ RunId = get_RunId()
 for file in s3_bucket.objects.all():
     if str(RunId) in file.key:
       obj = s3.Object(bucket, file.key)
-      print(obj)
+#       print(obj)
       body = obj.get()['Body'].read().decode('utf-8')
-      print(body)
+#       print(body)
       try:
           data = json.loads(body)
-          print(type(data))
+          print(type(data),"----------")
           table_data = create_json(data)
           source = table_data.get('Source')
           Database_name = table_data.get('Database_name')
@@ -246,7 +247,7 @@ for file in s3_bucket.objects.all():
           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
           action = table_data.get('action')
-          print(type(action),type(fielddetails))
+#           print(type(action),type(fielddetails))
           
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
@@ -269,12 +270,12 @@ for file in s3_bucket.objects.all():
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
 #           snow.cursor().execute(insert_sql)
           
-          with open('test_data.json', 'w') as f:
-            json.dump(table_data,f)
-          output_file_name = "test_data_final.json"
-          source_type = "snowflake"
-          table_data = "./test_data.json"
-          utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
+#           with open('test_data.json', 'w') as f:
+#             json.dump(table_data,f)
+#           output_file_name = "test_data_final.json"
+#           source_type = "snowflake"
+#           table_data = "./test_data.json"
+#           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
            
       except Exception as e:
           print(e)
