@@ -231,7 +231,7 @@ for file in s3_bucket.objects.all():
           action = table_data.get('action')
           action = json.dumps(action, cls=NpEncoder)
           print(type(action),type(fielddetails))
-          print(action)
+          print(fielddetails)
 
 
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
