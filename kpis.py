@@ -19,6 +19,18 @@ current_date = today.strftime("%Y-%m-%d")
 today = date.today()
 timestamp = datetime.now()
 RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
+
+def create_dataframe(sql, conn):
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    cols = []
+    for elt in cursor.description:
+        cols.append(elt[0])
+    df = pd.DataFrame(data=data, columns=cols)
+    cursor.close()
+    return df
+
 def postgre_connect(host, database, user, password):
     conn = None
     try:
