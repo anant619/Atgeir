@@ -29,11 +29,7 @@ except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
     
- s3 = boto3.resource(
-        's3',
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key
-    )
+s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
 s3_bucket = s3.Bucket(pgs_config_bucket)
 for file in s3_bucket.objects.all():
     obj = s3.Object(pgs_config_bucket, file.key)
