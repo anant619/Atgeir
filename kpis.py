@@ -223,7 +223,7 @@ for file in s3_bucket.objects.all():
           sql = f"select * from DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT;"
           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-          snow.cursor().execute(sql)
+          snow.cursor().execute(insert_sql)
 #           snow.sql(insert_sql).collect()
           
 #           with open('test_data.json', 'w') as f:
