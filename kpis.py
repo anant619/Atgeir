@@ -73,19 +73,17 @@ for file in s3_bucket.objects.all():
     config = df['properties'][0]
     new_dict = json.loads(config)
     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
-    
-    print(JSONDict)
-    
+      
+    account = JSONDict.get('ACCOUNT')
+    warehouse = JSONDict.get('WAREHOUSE')
+    role = JSONDict.get('ROLE')
+    database = JSONDict.get('DATABASE')
+#     schema = JSONDict.get('SCHEMA')
 #     account = JSONDict.get('NAME')
 #     account = JSONDict.get('NAME')
 #     account = JSONDict.get('NAME')
 #     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-sys.exit(0)
+
 def get_RunId():
     s3 = boto3.resource('s3')
     obj = s3.Object(bucket, "RunId.json")
@@ -263,7 +261,7 @@ for file in s3_bucket.objects.all():
           df = pd.DataFrame(data,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
-          snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
+          snow = utils.snow_connect(account, 'sayali', 'Atgeir@03', role, warehouse, database, 'HAWKEYE_APP')
           load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
