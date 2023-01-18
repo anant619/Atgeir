@@ -237,7 +237,7 @@ for file in s3_bucket.objects.all():
 
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
-          load_timestamp = pd.datetime.now().astype('datetime64[ns]')
+          load_timestamp = pd.datetime.now()
 #           load_timestamp = pd.Timestamp(np.datetime64[ns])
           
           print(load_timestamp)
@@ -249,6 +249,7 @@ for file in s3_bucket.objects.all():
           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","LOAD_TIMESTAMP"]
           data = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action,load_timestamp]]
           df = pd.DataFrame(data,columns=column)
+          df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df.columns = map(lambda x: str(x), columns)
           print(df)
           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
