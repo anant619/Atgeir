@@ -242,7 +242,7 @@ for file in s3_bucket.objects.all():
 #           print(type(fielddetails),action)
          
           columns = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION"]
-          data = [source, database_name,Schema_name,Table_name,tags,totalSqlQueriesCount,uniqueUserCount,fielddetails,action]
+          data = [source, Database_name,Schema_name,Table_name,tags,totalSqlQueriesCount,uniqueUserCount,fielddetails,action]
           df = pd.DataFrame(data)
           df.columns = map(lambda x: str(x), columns)
           print(df)
