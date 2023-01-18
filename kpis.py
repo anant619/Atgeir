@@ -216,9 +216,9 @@ for file in s3_bucket.objects.all():
           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
           action = table_data.get('action')
-          uniqueusercount = table_data.get('datasetUsage':'uniqueUserCount')
+          uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           print(uniqueusercount)
-          totalSqlQueriesCount = table_data.get('datasetUsage':'totalSqlQueriesCount')
+          totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
           print(totalSqlQueriesCount)
 
          
