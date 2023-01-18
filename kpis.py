@@ -236,13 +236,15 @@ for file in s3_bucket.objects.all():
 
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
+          load_timestamp = datetime.today()
+          print(load_timestamp)
 #           timestamp = table_data.get('timestamp')
 #           timestamp = datetime.fromtimestamp(int(timestamp))
 
 #           print(type(fielddetails),action)
          
-          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION"]
-          data = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action]]
+          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","LOAD_TIMESTAMP"]
+          data = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action,load_timestamp]]
           df = pd.DataFrame(data,columns=column)
 #           df.columns = map(lambda x: str(x), columns)
           print(df)
