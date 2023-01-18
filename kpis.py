@@ -216,7 +216,8 @@ for file in s3_bucket.objects.all():
           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
           fielddetails = fielddetails[:]
-    
+          action = table_data.get('action')
+
          
 #           data = [source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields]
 #           df = pd.DataFrame(data)
@@ -224,7 +225,7 @@ for file in s3_bucket.objects.all():
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
 #           load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
 
-          insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, fielddetails) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{fielddetails[:]}');"
+          insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{action}');"
           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
           snow.cursor().execute(insert_sql)
           
