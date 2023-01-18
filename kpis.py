@@ -24,11 +24,44 @@ try:
     bucket = config.get('AWS', 's3_output_bkt')
     aws_access_key_id = config.get('AWS', 'aws_access_key_id')
     aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
-      
+    pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
 
+s3_bucket = s3.Bucket(pgs_config_bucket)
+for file in s3_bucket.objects.all():
+    obj = s3.Object(pgs_config_bucket, file.key)
+    body = obj.get()['Body'].read().decode('utf-8')
+    print(obj, body)
+    config = json.loads(body)
+    logging.info("Successful!")
+    print("Successful")
+    source_type = config['source_type']
+    host = config['host']
+    username = config['username']
+    password = config['password']
+    database = config['database']
+
+    session = postgre_connect(host, database, username, password)
+    sf_conn_sql = f"select properties from data_sources where description = 'ML';"
+    df = create_dataframe(sf_conn_sql, session)
+    config = df['properties'][0]
+    new_dict = json.loads(config)
+    JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+    
+    print(JSONDict)
+    
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+#     account = JSONDict.get('NAME')
+sys.exit(0)
 def get_RunId():
     s3 = boto3.resource('s3')
     obj = s3.Object(bucket, "RunId.json")
@@ -140,19 +173,21 @@ def create_json(data):
     tableMetadata['datasetUsage'] = temp_dict
 
     return tableMetadata
-class NpEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        if isinstance(obj, np.floating):
-            return float(obj)
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        if isinstance(obj, pd.Series):
-            return obj.tolist()
-        if isinstance(obj, np.bool_):
-            return bool(obj)
-        return json.JSONEncoder.default(self, obj)
+
+# class NpEncoder(json.JSONEncoder):
+#     def default(self, obj):
+#         if isinstance(obj, np.integer):
+#             return int(obj)
+#         if isinstance(obj, np.floating):
+#             return float(obj)
+#         if isinstance(obj, np.ndarray):
+#             return obj.tolist()
+#         if isinstance(obj, pd.Series):
+#             return obj.tolist()
+#         if isinstance(obj, np.bool_):
+#             return bool(obj)
+#         return json.JSONEncoder.default(self, obj)
+    
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     print("Loading Data Frame")
     status, nchunks, nrows, _ = write_pandas(
