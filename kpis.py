@@ -215,7 +215,7 @@ for file in s3_bucket.objects.all():
           totalSqlQueriesCount = table_data.get('totalSqlQueriesCount')
           uniqueUserCount = table_data.get('uniqueUserCount')
           fields = table_data.get('fields')
-          print(fields[0])
+          print(fields[:])
 #           data = [source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields]
 #           df = pd.DataFrame(data)
 #           print(df)
