@@ -176,6 +176,16 @@ def create_json(data):
 
     return tableMetadata
 
+def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
+    # try:
+    # execute the command
+    print("Loading Data Frame")
+    status, nchunks, nrows, _ = write_pandas(
+        conn=snow, df=csv_df, table_name=tablename, schema=schemaname, quote_identifiers="False")
+    print(status, nchunks, nrows)
+    snow.close()
+    return status, nchunks, nrows
+
 # s3 = boto3.resource('s3')
 s3 = boto3.resource(
         's3',
