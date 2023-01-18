@@ -43,7 +43,7 @@ for file in s3_bucket.objects.all():
     password = config['password']
     database = config['database']
 
-    session = postgre_connect(host, database, username, password)
+    session = utils.postgre_connect(host, database, username, password)
     sf_conn_sql = f"select properties from data_sources where description = 'ML';"
     df = create_dataframe(sf_conn_sql, session)
     config = df['properties'][0]
