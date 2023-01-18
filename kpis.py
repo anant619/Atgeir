@@ -23,11 +23,11 @@ RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replac
 def create_dataframe(sql, conn):
     cursor = conn.cursor()
     cursor.execute(sql)
-    data = cursor.fetchall()
+    data1 = cursor.fetchall()
     cols = []
     for elt in cursor.description:
         cols.append(elt[0])
-    df = pd.DataFrame(data=data, columns=cols)
+    df = pd.DataFrame(data=data1, columns=cols)
     cursor.close()
     return df
 
@@ -257,8 +257,8 @@ for file in s3_bucket.objects.all():
 #           print(type(fielddetails),action)
          
           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION"]
-          data = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action]]
-          df = pd.DataFrame(data,columns=column)
+          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action]]
+          df = pd.DataFrame(data2,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
           snow = utils.snow_connect(account, 'sayali', 'Atgeir@03', role, warehouse, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
