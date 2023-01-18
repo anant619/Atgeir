@@ -235,6 +235,7 @@ for file in s3_bucket.objects.all():
       print(body)
       try:
           data = json.loads(body)
+          print(type(data))
           table_data = create_json(data)
           source = table_data.get('Source')
           Database_name = table_data.get('Database_name')
