@@ -220,10 +220,10 @@ for file in s3_bucket.objects.all():
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
 #           load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
 
-
+          sql = f"select * from DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT;"
           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (SOURCE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME,UNIQUEUSERUSAGECOUNT, TOTALQUERIESCOUNT, FIELDDETAILS) VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-          snow.cursor().execute(insert_sql)
+          snow.cursor().execute(sql)
 #           snow.sql(insert_sql).collect()
           
 #           with open('test_data.json', 'w') as f:
