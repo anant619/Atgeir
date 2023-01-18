@@ -77,7 +77,7 @@ for file in s3_bucket.objects.all():
     account = JSONDict.get('ACCOUNT')
     warehouse = JSONDict.get('WAREHOUSE')
     role = JSONDict.get('ROLE')
-    database = JSONDict.get('DATABASE')
+#     database = JSONDict.get('DATABASE')
 #     schema = JSONDict.get('SCHEMA')
 #     account = JSONDict.get('NAME')
 #     account = JSONDict.get('NAME')
@@ -261,7 +261,7 @@ for file in s3_bucket.objects.all():
           df = pd.DataFrame(data,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
-          snow = utils.snow_connect(account, 'sayali', 'Atgeir@03', role, warehouse, database, 'HAWKEYE_APP')
+          snow = utils.snow_connect(account, 'sayali', 'Atgeir@03', role, warehouse, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
           load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
