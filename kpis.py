@@ -231,6 +231,8 @@ for file in s3_bucket.objects.all():
           action = table_data.get('action')
           action = json.dumps(action, cls=NpEncoder)
           print(type(action),type(fielddetails))
+          print(action)
+
 
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
