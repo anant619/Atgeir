@@ -228,31 +228,23 @@ for file in s3_bucket.objects.all():
           totalSqlQueriesCount = table_data.get('totalSqlQueriesCount')
           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
-#           fielddetails = json.dumps(fielddetails, cls=NpEncoder)
           action = table_data.get('action')
-#           action = json.dumps(action, cls=NpEncoder)
           print(type(action),type(fielddetails))
-          print(fielddetails)
-
-
+          
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
-          load_timestamp = pd.datetime.now()
+#           load_timestamp = pd.datetime.now()
 #           load_timestamp = pd.Timestamp(np.datetime64[ns])
-          
-          print(load_timestamp)
+#           print(load_timestamp)
 #           timestamp = table_data.get('timestamp')
 #           timestamp = datetime.fromtimestamp(int(timestamp))
-
 #           print(type(fielddetails),action)
          
-          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","LOAD_TIMESTAMP"]
-          data = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action,load_timestamp]]
+          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION"]
+          data = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action]]
           df = pd.DataFrame(data,columns=column)
-          df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
-          df['LOAD_TIMESTAMP'].astype('str')
-#           df.columns = map(lambda x: str(x), columns)
-          print(df)
+#           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
+#           df['LOAD_TIMESTAMP'].astype('str')
           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
           load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
 
@@ -260,12 +252,12 @@ for file in s3_bucket.objects.all():
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
 #           snow.cursor().execute(insert_sql)
           
-#           with open('test_data.json', 'w') as f:
-#             json.dump(table_data,f)
-#           output_file_name = "test_data_final.json"
-#           source_type = "snowflake"
-#           table_data = "./test_data.json"
-#           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
+          with open('test_data.json', 'w') as f:
+            json.dump(table_data,f)
+          output_file_name = "test_data_final.json"
+          source_type = "snowflake"
+          table_data = "./test_data.json"
+          utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
            
       except Exception as e:
           print(e)
