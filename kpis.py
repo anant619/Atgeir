@@ -36,7 +36,6 @@ for file in s3_bucket.objects.all():
     body = obj.get()['Body'].read().decode('utf-8')
     print(obj, body)
     config = json.loads(body)
-    logging.info("Successful!")
     print("Successful")
     source_type = config['source_type']
     host = config['host']
