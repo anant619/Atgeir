@@ -205,6 +205,7 @@ for file in s3_bucket.objects.all():
           fields = table_data.get('fields')
           data = [source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields]
           df = pd.DataFrame(data)
+          print(df)
 
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (SOURCE, DATABASE_NAME, SCHEMA_NAME, TABLE_NAME,'UNIQUEUSERUSAGECOUNT', 'TOTALQUERIESCOUNT', 'FIELDDETAILS') VALUES (source, Database_name, Schema_name, Table_name, totalSqlQueriesCount, uniqueUserCount, fields);"   
