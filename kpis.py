@@ -215,7 +215,11 @@ for file in s3_bucket.objects.all():
           totalSqlQueriesCount = table_data.get('totalSqlQueriesCount')
           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
+          fielddetails = json.dumps(fielddetails)
           action = table_data.get('action')
+          action = json.dumps(action)
+          print(type(action),type(fielddetails))
+
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
 #           timestamp = table_data.get('timestamp')
