@@ -8,6 +8,7 @@ import pandas as pd
 import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
+from snowflake.connector.pandas_tools import write_pandas
 # from snowflake.snowpark import Session
 # import snowflake.connector
 import json
