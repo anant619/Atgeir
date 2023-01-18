@@ -18,6 +18,17 @@ current_date = today.strftime("%Y-%m-%d")
 today = date.today()
 timestamp = datetime.now()
 RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
+def postgre_connect(host, database, user, password):
+    conn = None
+    try:
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(host=host,
+                                database=database,
+                                user=user,
+                                password=password)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    return conn
 
 try:
     config = utils.read_config_file(config_dir)
@@ -43,7 +54,7 @@ for file in s3_bucket.objects.all():
     password = config['password']
     database = config['database']
 
-    session = utils.postgre_connect(host, database, username, password)
+    session = postgre_connect(host, database, username, password)
     sf_conn_sql = f"select properties from data_sources where description = 'ML';"
     df = create_dataframe(sf_conn_sql, session)
     config = df['properties'][0]
