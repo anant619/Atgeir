@@ -249,9 +249,11 @@ for file in s3_bucket.objects.all():
           action = table_data.get('action')
           rowCount = table_data.get('rowCount')
           columnCount = table_data.get('columnCount')
-          print(action[0].get('timestamp'))
+          timestamp = action[0].get('timestamp')
+          user = action[0].get('user')
+        
 #           timestamp = table_data.get('action').get('timestamp')
-          print(timestamp)
+         
 #           print(type(action),type(fielddetails))
           
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
@@ -263,8 +265,8 @@ for file in s3_bucket.objects.all():
 #           timestamp = datetime.fromtimestamp(int(timestamp))
 #           print(type(fielddetails),action)
          
-          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT"]
-          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount]]
+          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT","CREATEDBY","CREATIONTIMESTAMP"]
+          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount,user,timestamp]]
           df = pd.DataFrame(data2,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
