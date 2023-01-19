@@ -9,6 +9,7 @@ import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
 import numpy as np
+import logging
 from snowflake.connector.pandas_tools import write_pandas
 import json
 import psycopg2
