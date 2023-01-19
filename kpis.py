@@ -282,7 +282,7 @@ for file in s3_bucket.objects.all():
           action = table_data.get('action')
           rowCount = table_data.get('rowCount')
           columnCount = table_data.get('columnCount')
-          if [action][0].get('operationType') == 'CREATE':
+          if action[0].get('operationType') == 'CREATE':
               print("-----")
               timestamp = action[0].get('timestamp')
               user = action[0].get('user')
