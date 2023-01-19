@@ -10,8 +10,9 @@ from neo4j import GraphDatabase
 from datetime import timedelta
 import numpy as np
 import logging
-import serialization
-from snowflake.connector.pandas_tools import write_pandas
+import snowflake.connector
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backendfrom snowflake.connector.pandas_tools import write_pandas
 import json
 import psycopg2
 config_dir = "./config.properties"  
