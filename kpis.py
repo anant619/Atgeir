@@ -9,10 +9,6 @@ import graph as g
 from neo4j import GraphDatabase
 from datetime import timedelta
 import numpy as np
-import logging
-import snowflake.connector
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backendfrom 
 from snowflake.connector.pandas_tools import write_pandas
 import json
 import psycopg2
@@ -76,9 +72,9 @@ for file in s3_bucket.objects.all():
     df = create_dataframe(sf_conn_sql, session)
     config = df['output_properties'][0]
     new_dict = json.loads(config)
-#     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+    JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
     
-    JSONDict = dict((k.upper().strip(), v) for k, v in new_dict.items())
+#     JSONDict = dict((k.upper().strip(), v) for k, v in new_dict.items())
     sf_account_url = JSONDict.get('ACCOUNT_URL')
     sf_account = JSONDict.get('ACCOUNT')
     sf_role = JSONDict.get('ROLE')
@@ -89,48 +85,38 @@ for file in s3_bucket.objects.all():
     sf_database = JSONDict.get('DATABASE')
     sf_schema = JSONDict.get('SCHEMA')
 
-    with open("private_key.p8", "wb") as f:
-        f.write(sf_privatekey.encode())
+#     with open("private_key.p8", "wb") as f:
+#         f.write(sf_privatekey.encode())
 
-    try:
-        with open("./private_key.p8", "rb") as key:
-            p_key = serialization.load_pem_private_key(
-                key.read(),
-                password=sf_passphrase.encode(),
-                backend=default_backend()
-            )
+#     try:
+#         with open("./private_key.p8", "rb") as key:
+#             p_key = serialization.load_pem_private_key(
+#                 key.read(),
+#                 password=sf_passphrase.encode(),
+#                 backend=default_backend()
+#             )
 
-        pkb = p_key.private_bytes(
-            encoding=serialization.Encoding.DER,
-            format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption())
+#         pkb = p_key.private_bytes(
+#             encoding=serialization.Encoding.DER,
+#             format=serialization.PrivateFormat.PKCS8,
+#             encryption_algorithm=serialization.NoEncryption())
 
-        connection = snowflake.connector.connect(
-            account=sf_account,
-            user=sf_user,
-            role=sf_role,
-            private_key=pkb,
-            warehouse=sf_warehouse,
-            database=sf_database,
-            schema=sf_schema,
-            timezone='UTC'
-        )
+#         connection = snowflake.connector.connect(
+#             account=sf_account,
+#             user=sf_user,
+#             role=sf_role,
+#             private_key=pkb,
+#             warehouse=sf_warehouse,
+#             database=sf_database,
+#             schema=sf_schema,
+#             timezone='UTC'
+#         )
      
-    except Exception as ex:
-        logging.error(f"Error code    = {type(ex).__name__}")
-        logging.error(f"Error Message = {ex}")
-        sys.exit(1)
+#     except Exception as ex:
+#         logging.error(f"Error code    = {type(ex).__name__}")
+#         logging.error(f"Error Message = {ex}")
+#         sys.exit(1)
       
-#     account = JSONDict.get('ACCOUNT')
-#     warehouse = JSONDict.get('WAREHOUSE')
-#     role = JSONDict.get('ROLE')
-#     database = JSONDict.get('DATABASE')
-#     schema = JSONDict.get('SCHEMA')
-#     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-#     account = JSONDict.get('NAME')
-
 def get_RunId():
     s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
     obj = s3.Object(bucket, "RunId.json")
@@ -294,12 +280,11 @@ for file in s3_bucket.objects.all():
           columnCount = table_data.get('columnCount')
           timestamp = action[0].get('timestamp')
           user = action[0].get('user')
+          uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
+          totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
         
 #           timestamp = table_data.get('action').get('timestamp')
 #           print(type(action),type(fielddetails))
-          
-          uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
-          totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
 #           load_timestamp = pd.datetime.now()
 #           load_timestamp = pd.Timestamp(np.datetime64[ns])
 #           print(load_timestamp)
@@ -312,8 +297,8 @@ for file in s3_bucket.objects.all():
           df = pd.DataFrame(data2,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
-#           snow = utils.snow_connect(account, 'sayali', 'Atgeir@03', role, warehouse, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-          load_df_to_snowflake(connection, df, 'sf_database', 'sf_schema', 'METADATA_REPORT')
+          snow = utils.snow_connect(account, sf_user, 'Atg@12345', sf_role, sf_warehouse, sf_database, sf_schema)
+          load_df_to_snowflake(snow, df, sf_database, sf_schema, 'METADATA_REPORT')
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
