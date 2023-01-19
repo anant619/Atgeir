@@ -247,7 +247,9 @@ for file in s3_bucket.objects.all():
           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
           action = table_data.get('action')
-          timestamp = table_data.get('action').get('timestamp')
+          rowCount = table_data.get('rowCount')
+          columnCount = table_data.get('columnCount')
+#           timestamp = table_data.get('action').get('timestamp')
           print(timestamp)
 #           print(type(action),type(fielddetails))
           
@@ -260,8 +262,8 @@ for file in s3_bucket.objects.all():
 #           timestamp = datetime.fromtimestamp(int(timestamp))
 #           print(type(fielddetails),action)
          
-          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION"]
-          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action]]
+          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT"]
+          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueUserCount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount]]
           df = pd.DataFrame(data2,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
