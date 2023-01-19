@@ -249,6 +249,7 @@ for file in s3_bucket.objects.all():
           action = table_data.get('action')
           rowCount = table_data.get('rowCount')
           columnCount = table_data.get('columnCount')
+          print(action[0].get('timestamp'))
 #           timestamp = table_data.get('action').get('timestamp')
           print(timestamp)
 #           print(type(action),type(fielddetails))
