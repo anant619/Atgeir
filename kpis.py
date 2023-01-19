@@ -85,7 +85,7 @@ for file in s3_bucket.objects.all():
 #     account = JSONDict.get('NAME')
 
 def get_RunId():
-    s3 = boto3.resource('s3')
+    s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
     obj = s3.Object(bucket, "RunId.json")
     body = obj.get()['Body'].read().decode('utf-8')
     config = json.loads(body)
