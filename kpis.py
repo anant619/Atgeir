@@ -68,15 +68,58 @@ for file in s3_bucket.objects.all():
     database = config['database']
 
     session = postgre_connect(host, database, username, password)
-    sf_conn_sql = f"select properties from data_sources where description = 'ML';"
+    sf_conn_sql = f"select output_properties from data_sources where description = 'ML';"
     df = create_dataframe(sf_conn_sql, session)
     config = df['properties'][0]
     new_dict = json.loads(config)
-    JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+#     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+    
+    JSONDict = dict((k.upper().strip(), v) for k, v in new_dict.items())
+    sf_account_url = JSONDict.get('ACCOUNT_URL')
+    sf_account = JSONDict.get('ACCOUNT')
+    sf_role = JSONDict.get('ROLE')
+    sf_user = JSONDict.get('NAME')
+    sf_privatekey = JSONDict.get('PRIVATEKEY')
+    sf_passphrase = JSONDict.get('PASSPHRASE').lower()
+    sf_warehouse = JSONDict.get('WAREHOUSE')
+    sf_database = JSONDict.get('DATABASE')
+    sf_schema = JSONDict.get('SCHEMA')
+
+    with open("private_key.p8", "wb") as f:
+        f.write(sf_privatekey.encode())
+
+    try:
+        with open("./private_key.p8", "rb") as key:
+            p_key = serialization.load_pem_private_key(
+                key.read(),
+                password=sf_passphrase.encode(),
+                backend=default_backend()
+            )
+
+        pkb = p_key.private_bytes(
+            encoding=serialization.Encoding.DER,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption())
+
+        connection = snowflake.connector.connect(
+            account=sf_account,
+            user=sf_user,
+            role=sf_role,
+            private_key=pkb,
+            warehouse=sf_warehouse,
+            database=sf_database,
+            schema=sf_schema,
+            timezone='UTC'
+        )
+     
+    except Exception as ex:
+        logging.error(f"Error code    = {type(ex).__name__}")
+        logging.error(f"Error Message = {ex}")
+        sys.exit(1)
       
-    account = JSONDict.get('ACCOUNT')
-    warehouse = JSONDict.get('WAREHOUSE')
-    role = JSONDict.get('ROLE')
+#     account = JSONDict.get('ACCOUNT')
+#     warehouse = JSONDict.get('WAREHOUSE')
+#     role = JSONDict.get('ROLE')
 #     database = JSONDict.get('DATABASE')
 #     schema = JSONDict.get('SCHEMA')
 #     account = JSONDict.get('NAME')
@@ -196,19 +239,19 @@ def create_json(data):
 
     return tableMetadata
 
-class NpEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        if isinstance(obj, np.floating):
-            return float(obj)
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        if isinstance(obj, pd.Series):
-            return obj.tolist()
-        if isinstance(obj, np.bool_):
-            return bool(obj)
-        return json.JSONEncoder.default(self, obj)
+# class NpEncoder(json.JSONEncoder):
+#     def default(self, obj):
+#         if isinstance(obj, np.integer):
+#             return int(obj)
+#         if isinstance(obj, np.floating):
+#             return float(obj)
+#         if isinstance(obj, np.ndarray):
+#             return obj.tolist()
+#         if isinstance(obj, pd.Series):
+#             return obj.tolist()
+#         if isinstance(obj, np.bool_):
+#             return bool(obj)
+#         return json.JSONEncoder.default(self, obj)
     
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     print("Loading Data Frame")
@@ -230,12 +273,9 @@ RunId = get_RunId()
 for file in s3_bucket.objects.all():
     if str(RunId) in file.key:
       obj = s3.Object(bucket, file.key)
-#       print(obj)
       body = obj.get()['Body'].read().decode('utf-8')
-#       print(body)
       try:
           data = json.loads(body)
-#           print(type(data),"----------")
           table_data = create_json(data)
           print(table_data)
           source = table_data.get('Source')
@@ -244,8 +284,6 @@ for file in s3_bucket.objects.all():
           Table_name = table_data.get('Table_name')
           tags = table_data.get('tags')
           topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
-#           totalSqlQueriesCount = table_data.get('totalSqlQueriesCount')
-#           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
           action = table_data.get('action')
           rowCount = table_data.get('rowCount')
@@ -254,7 +292,6 @@ for file in s3_bucket.objects.all():
           user = action[0].get('user')
         
 #           timestamp = table_data.get('action').get('timestamp')
-         
 #           print(type(action),type(fielddetails))
           
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
@@ -271,8 +308,8 @@ for file in s3_bucket.objects.all():
           df = pd.DataFrame(data2,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
-          snow = utils.snow_connect(account, 'sayali', 'Atgeir@03', role, warehouse, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-          load_df_to_snowflake(snow, df, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP', 'METADATA_REPORT')
+#           snow = utils.snow_connect(account, 'sayali', 'Atgeir@03', role, warehouse, 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
+          load_df_to_snowflake(connection, df, 'sf_database', 'sf_schema', 'METADATA_REPORT')
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
