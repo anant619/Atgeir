@@ -243,7 +243,7 @@ for file in s3_bucket.objects.all():
           Schema_name = table_data.get('Schema_name')
           Table_name = table_data.get('Table_name')
           tags = table_data.get('tags')
-          topSqlQueries = table_data.get('topSqlQueries')
+          topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
 #           totalSqlQueriesCount = table_data.get('totalSqlQueriesCount')
 #           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
