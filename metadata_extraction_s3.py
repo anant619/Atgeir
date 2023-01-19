@@ -108,7 +108,7 @@ def up_yml(JSONDict):
         # source_config['password'] = 'JSONDict.get('password')'
         source_config['password'] = "Atgeir@03"
         # source_config['table_pattern']['allow'] = F".*{JSONDict.get('table')}"
-        source_config['table_pattern']['allow'] = F".*MODEL_DETAILS"
+        source_config['table_pattern']['allow'] = F".*ITEM"
         source_config['profile_pattern']['allow'] = F'{JSONDict.get("DATABASE")}.*.*'
 
         database_pattern = F'^{JSONDict.get("DATABASE")}$'
