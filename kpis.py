@@ -247,6 +247,8 @@ for file in s3_bucket.objects.all():
           uniqueUserCount = table_data.get('uniqueUserCount')
           fielddetails = table_data.get('fields')
           action = table_data.get('action')
+          timestamp = table_data.get('action').get('timestamp')
+          print(timestamp)
 #           print(type(action),type(fielddetails))
           
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
