@@ -205,24 +205,22 @@ def metadata_profiling():
             print(i)
             sql = f"select properties from data_sources where id = {i}";
             df1 = create_dataframe(sql, session)
-            print(df1)
-
-#             if i in df['id']:
-#                 print(df['properties'])
-#         print(id_list)
-        sys.exit(0)
-        config = df['properties'][0]
-        new_dict = json.loads(config)
-        JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
-        local_file, output_path, output_file_name = up_yml(JSONDict)
-        replace_yml(local_file)
-        call_datahub(local_file)
-        upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
-        stroe_run_id(output_bkt, RunID)
-        return 'success'
+            config = df1['properties'][0]
+            new_dict = json.loads(config)
+            JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+            local_file, output_path, output_file_name = up_yml(JSONDict)
+            replace_yml(local_file)
+            call_datahub(local_file)
+            upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
+            stroe_run_id(output_bkt, RunID)
+            sql2 = f"select distinct(table_name) from hawkeye_details where data_source_id={i} and end_date is null"; 
+            df2 = create_dataframe(sql, session)
+            print(df2)
+            return 'success'
 
 
 metadata_profiling()
+sys.exit(0)
 import datetime,sys
 import json
 from datetime import date
