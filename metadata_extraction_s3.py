@@ -200,6 +200,8 @@ def metadata_profiling():
         sf_conn_sql = f"select id, properties, output_properties from data_sources where data_source_type = 'Hawkeye';"
         df = create_dataframe(sf_conn_sql, session)
         print(df)
+        id_list = df['id']
+        print(id_list)
         sys.exit(0)
         config = df['properties'][0]
         new_dict = json.loads(config)
