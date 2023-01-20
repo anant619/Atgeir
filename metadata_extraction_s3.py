@@ -202,7 +202,7 @@ def metadata_profiling():
         print(df)
         id_list = df['id']
         for i in id_list:
-            sql = f"select properties from data_source where id = i";
+            sql = f"select properties from data_sources where id = i";
             df1 = create_dataframe(sql, session)
             print(df1)
 
