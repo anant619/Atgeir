@@ -263,10 +263,10 @@ def metadata_profiling():
                     stroe_run_id(output_bkt, RunID)
             
             return 'success'
-sys.exit(0)
+
 
 metadata_profiling()
-
+sys.exit(0)
 import datetime,sys
 import json
 from datetime import date
