@@ -216,11 +216,12 @@ def metadata_profiling():
             sql2 = f"select distinct(table_name) from hawkeye_details where data_source_id={i} and end_date is null"; 
             df2 = create_dataframe(sql, session)
             print(df2)
+            sys.exit(0)
             return 'success'
 
 
 metadata_profiling()
-sys.exit(0)
+
 import datetime,sys
 import json
 from datetime import date
