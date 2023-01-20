@@ -207,7 +207,8 @@ def metadata_profiling():
             df1 = create_dataframe(sql, session)
             sql2 = f"select distinct(table_name) from hawkeye_details where data_source_id={i} and end_date is null"; 
             df2 = create_dataframe(sql2, session)
-            print(df2)
+            table_names = df2['table_name']
+            print(table_names)
             sys.exit(0)
             config = df1['properties'][0]
             new_dict = json.loads(config)
