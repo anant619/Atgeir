@@ -285,6 +285,9 @@ for file in s3_bucket.objects.all():
           if action[0].get('operationType') == 'CREATE':
               timestamp = action[0].get('timestamp')
               user = action[0].get('user')
+          else:
+              timestamp = 'NULL'
+              user = 'NULL'
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
         
