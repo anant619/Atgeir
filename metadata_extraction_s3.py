@@ -202,9 +202,13 @@ def metadata_profiling():
         print(df)
         id_list = df['id']
         for i in id_list:
-            if i in df['id']:
-                print(df['properties'])
-        print(id_list)
+            sql = f"select properties from data_source where id = i;
+            df1 = create_dataframe(sql, session)
+            print(df1)
+
+#             if i in df['id']:
+#                 print(df['properties'])
+#         print(id_list)
         sys.exit(0)
         config = df['properties'][0]
         new_dict = json.loads(config)
