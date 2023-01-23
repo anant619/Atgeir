@@ -263,7 +263,7 @@ def metadata_profiling():
                     upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
                     stroe_run_id(output_bkt, RunID)
             
-            return 'success'
+     return 'success'
 
 
 metadata_profiling()
