@@ -108,9 +108,9 @@ def metadata_profiling():
         id_list = df['id']
         for i in id_list:
             sql = f"select properties from data_sources where id = {i}";
-            df1 = create_dataframe(sql, session)
+            df1 = utils.create_dataframe(sql, session)
             sql2 = f"select distinct(table_name) from hawkeye_details where data_source_id={i} and end_date is null"; 
-            df2 = create_dataframe(sql2, session)
+            df2 = utils.create_dataframe(sql2, session)
             table_names = df2['table_name']
             
             config = df1['properties'][0]
@@ -179,7 +179,7 @@ for file in s3_bucket.objects.all():
 
     session = utils.postgre_connect(host, database, username, password)
     sf_conn_sql = f"select output_properties from data_sources where data_source_type = 'Hawkeye';"
-    df = create_dataframe(sf_conn_sql, session)
+    df = utils.create_dataframe(sf_conn_sql, session)
     config = df['output_properties'][0]
     new_dict = json.loads(config)
    
