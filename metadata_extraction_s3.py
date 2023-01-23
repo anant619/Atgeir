@@ -549,7 +549,7 @@ for file in s3_bucket.objects.all():
           tags = table_data.get('tags')
           topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
           fielddetails = table_data.get('fields')
-          if table_data.get('action') != none:
+          if "action" in table_data.keys()
             action = table_data.get('action')
             if action[0].get('operationType') == 'CREATE':
                 timestamp = action[0].get('timestamp')
