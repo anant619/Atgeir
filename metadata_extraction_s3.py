@@ -552,6 +552,8 @@ for file in s3_bucket.objects.all():
                 user = 'NULL'
           else:
             action = 'NULL'
+            timestamp = 'NULL'
+            user = 'NULL'
         
          
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
@@ -585,7 +587,7 @@ for file in s3_bucket.objects.all():
           
           with open('test_data.json', 'w') as f:
             json.dump(table_data,f)
-          output_file_name = "test_data_final.json"
+          output_file_name = f"{Table_name}_output.json"
           source_type = "snowflake"
           table_data = "./test_data.json"
           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
