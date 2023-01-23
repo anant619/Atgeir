@@ -257,10 +257,10 @@ def metadata_profiling():
 #                 return local_file, output_path, output_file_name
                 print("ssssss")
 
-                replace_yml(local_file)
-                call_datahub(local_file)
-                upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
-                stroe_run_id(output_bkt, RunID)
+                    replace_yml(local_file)
+                    call_datahub(local_file)
+                    upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
+                    stroe_run_id(output_bkt, RunID)
             
             return 'success'
 
