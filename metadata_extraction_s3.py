@@ -3,50 +3,41 @@ import boto3
 import sys
 import datetime
 from datetime import date
-from datetime import datetime
 import os
 import glob
-import logging
 import numpy as np
 import pandas as pd
-import psycopg2
 import configparser
 from datetime import timedelta
 import yaml
 import subprocess
 import shlex
-import subprocess
+from datetime import datetime
+import Utilities as utils
+from snowflake.connector.pandas_tools import write_pandas
+import psycopg2
+import snowflake.connector
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
+import logging
 
-config_dir = "./config.properties"  # for ec2
-
-def read_config_file(config_dir):
-    """
-    Sourcing Configuration File
-    """
-    try:
-        conf = configparser.RawConfigParser()
-        conf.read(config_dir)
-    except Exception as ex:
-        print(f"Error code    = {type(ex).__name__}")
-        print(f"Error Message = {ex}")
-    return conf
-
+config_dir = "./config.properties"  
 today = date.today()
+current_date = today.strftime("%Y-%m-%d")
 timestamp = datetime.now()
 RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
 
 try:
-    config = read_config_file(config_dir)
+    config = utils.read_config_file(config_dir)
     pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
     yml_bkt = config.get('AWS', 's3_yml_template_bkt')
     output_bkt = config.get('AWS', 's3_output_bkt')
     aws_access_key_id = config.get('AWS', 'aws_access_key_id')
     aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
-#    	metadata-bkt = config.get('AWS', 'metadata_bkt')
 except Exception as ex:
     print(f"Error code    = {type(ex).__name__}")
     print(f"Error Message = {ex}")
-
+  
 
 def stroe_run_id(output_bkt, RunID):
     s3 = boto3.resource(
@@ -61,92 +52,6 @@ def stroe_run_id(output_bkt, RunID):
     print(config['RunId'])
     s3object = s3.Object(output_bkt, 'RunId.json')
     s3object.put(Body=(bytes(json.dumps(config).encode('UTF-8'))))
-
-def postgre_connect(host, database, user, password):
-    conn = None
-    try:
-        # connect to the PostgreSQL server
-        conn = psycopg2.connect(host=host,
-                                database=database,
-                                user=user,
-                                password=password)
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    return conn
-
-
-def create_dataframe(sql, conn):
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    cols = []
-    for elt in cursor.description:
-        cols.append(elt[0])
-    df = pd.DataFrame(data=data, columns=cols)
-    cursor.close()
-    return df
-
-
-# def up_yml(JSONDict):
-#     s3 = boto3.resource(
-#         's3',
-#         aws_access_key_id=aws_access_key_id,
-#         aws_secret_access_key=aws_secret_access_key
-#     )
-#     s3_bucket = s3.Bucket(yml_bkt)
-#     for file in s3_bucket.objects.all():
-#         obj = s3.Object(yml_bkt, file.key)
-#         body = obj.get()['Body'].read().decode('utf-8')
-#         configfile = yaml.safe_load(body)
-#         output_file_name = f"output_{i}.json"
-
-#         output_path = f"./metadata_{i}.json"
-
-#         source_config = configfile['source']['config']
-#         # source_config['username'] = JSONDict.get('NAME')
-#         source_config['username'] = "sayali"
-#         # source_config['password'] = 'JSONDict.get('password')'
-#         source_config['password'] = "Atgeir@03"
-#         # source_config['table_pattern']['allow'] = F".*{JSONDict.get('table')}"
-#         source_config['table_pattern']['allow'] = F".*ITEM"
-#         source_config['profile_pattern']['allow'] = F'{JSONDict.get("DATABASE")}.*.*'
-
-#         database_pattern = F'^{JSONDict.get("DATABASE")}$'
-#         source_config['database_pattern']['allow'] = database_pattern
-#         # source_config['provision_role']['admin_username'] = F'"{JSONDict.get("NAME")}"'
-#         source_config['provision_role']['admin_username'] = 'sayali'
-#         # source_config['provision_role']['admin_password'] = JSONDict.get(
-#         #     'password')
-#         source_config['provision_role']['admin_password'] = 'Atgeir@03'
-#         source_config['account_id'] = F'{JSONDict.get("ACCOUNT")}'
-# #         source_config['check_role_grants'] = 'false'
-#         source_config['provision_role']['run_ingestion'] = 'true'
-#         source_config['warehouse'] = F'{JSONDict.get("WAREHOUSE")}'
-#         source_config['role'] = F'{JSONDict.get("ROLE")}'
-#         configfile['sink']['config']['filename'] = output_path
-#         local_file = f'./datahub_{i}.yml'
-
-#         with open(local_file, 'w+') as f:
-#             yaml.safe_dump(configfile, f, default_flow_style=False)
-#             print("file loaded successfully", local_file)
-#             print(source_config)
-#         return local_file, output_path, output_file_name
-
-
-def replace_yml(path):
-    try:
-        search_text, replace_text = 'allow:', 'allow: \n      - '
-        with open(path, 'r') as file:
-            data = file.read()
-            data = data.replace(search_text, replace_text)
-
-        with open(path, 'w') as file:
-            file.write(data)
-        print(f"Text replaced for {path}")
-        print(data)
-    except Exception as ex:
-        print(f"Error code    = {type(ex).__name__}")
-        print(f"Error Message = {ex}")
 
 
 def upload_file(file_path, bucket_name, source, output_file_name):
@@ -196,7 +101,7 @@ def metadata_profiling():
         password = config['password']
         database = config['database']
 
-        session = postgre_connect(host, database, username, password)
+        session = utils.postgre_connect(host, database, username, password)
         sf_conn_sql = f"select id, properties, output_properties from data_sources where data_source_type = 'Hawkeye';"
         df = create_dataframe(sf_conn_sql, session)
         print(df)
@@ -249,78 +154,14 @@ def metadata_profiling():
                     with open(local_file, 'w+') as f:
                         yaml.safe_dump(configfile, f, default_flow_style=False)
                         print("file loaded successfully", local_file)
-#                         print(source_config)
-#                 return local_file, output_path, output_file_name
-#                 print("ssssss")
 
-                    replace_yml(local_file)
+                    utils.replace_yml(local_file)
                     call_datahub(local_file)
                     upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
                     stroe_run_id(output_bkt, RunID)
             
-#      return 'success'
-
-
 metadata_profiling()
-# sys.exit(0)
-import datetime,sys
-import json
-from datetime import date
-from datetime import datetime
-import Utilities as utils
-import boto3
-import pandas as pd
-import graph as g
-from neo4j import GraphDatabase
-from datetime import timedelta
-import numpy as np
-from snowflake.connector.pandas_tools import write_pandas
-import json
-import psycopg2
-import snowflake.connector
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.backends import default_backend
-import logging
-config_dir = "./config.properties"  
-today = date.today()
-current_date = today.strftime("%Y-%m-%d")
 
-# today = date.today()
-# timestamp = datetime.now()
-# RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
-
-def create_dataframe(sql, conn):
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    data1 = cursor.fetchall()
-    cols = []
-    for elt in cursor.description:
-        cols.append(elt[0])
-    df = pd.DataFrame(data=data1, columns=cols)
-    cursor.close()
-    return df
-
-def postgre_connect(host, database, user, password):
-    conn = None
-    try:
-        # connect to the PostgreSQL server
-        conn = psycopg2.connect(host=host,
-                                database=database,
-                                user=user,
-                                password=password)
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    return conn
-
-try:
-    config = utils.read_config_file(config_dir)
-    bucket = config.get('AWS', 's3_output_bkt')
-    aws_access_key_id = config.get('AWS', 'aws_access_key_id')
-    aws_secret_access_key = config.get('AWS', 'aws_secret_access_key')
-    pgs_config_bucket = config.get('AWS', 'pgs_config_bucket')
-except Exception as ex:
-    print(f"Error code    = {type(ex).__name__}")
-    print(f"Error Message = {ex}")
     
 s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
 s3_bucket = s3.Bucket(pgs_config_bucket)
@@ -336,13 +177,12 @@ for file in s3_bucket.objects.all():
     password = config['password']
     database = config['database']
 
-    session = postgre_connect(host, database, username, password)
+    session = utils.postgre_connect(host, database, username, password)
     sf_conn_sql = f"select output_properties from data_sources where data_source_type = 'Hawkeye';"
     df = create_dataframe(sf_conn_sql, session)
     config = df['output_properties'][0]
     new_dict = json.loads(config)
-#     JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
-    
+   
     JSONDict = dict((k.upper().strip(), v) for k, v in new_dict.items())
     sf_account_url = JSONDict.get('ACCOUNT_URL')
     sf_account = JSONDict.get('ACCOUNT')
@@ -388,7 +228,7 @@ for file in s3_bucket.objects.all():
       
 def get_RunId():
     s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
-    obj = s3.Object(bucket, "RunId.json")
+    obj = s3.Object(output_bkt, "RunId.json")
     body = obj.get()['Body'].read().decode('utf-8')
     config = json.loads(body)
     RunId = config['RunId']
@@ -498,20 +338,6 @@ def create_json(data):
 
     return tableMetadata
 
-# class NpEncoder(json.JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, np.integer):
-#             return int(obj)
-#         if isinstance(obj, np.floating):
-#             return float(obj)
-#         if isinstance(obj, np.ndarray):
-#             return obj.tolist()
-#         if isinstance(obj, pd.Series):
-#             return obj.tolist()
-#         if isinstance(obj, np.bool_):
-#             return bool(obj)
-#         return json.JSONEncoder.default(self, obj)
-    
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     print("Loading Data Frame")
     status, nchunks, nrows, _ = write_pandas(
@@ -525,12 +351,12 @@ s3 = boto3.resource(
         aws_secret_access_key=aws_secret_access_key
     )
 print("login Successful")
-s3_bucket = s3.Bucket(bucket)
+s3_bucket = s3.Bucket(output_bkt)
 RunId = get_RunId()
 
 for file in s3_bucket.objects.all():
     if str(RunId) in file.key:
-      obj = s3.Object(bucket, file.key)
+      obj = s3.Object(output_bkt, file.key)
       body = obj.get()['Body'].read().decode('utf-8')
       try:
           data = json.loads(body)
@@ -542,6 +368,8 @@ for file in s3_bucket.objects.all():
           tags = table_data.get('tags')
           topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
           fielddetails = table_data.get('fields')
+          uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
+          totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
           if "action" in table_data.keys():
             action = table_data.get('action')
             if action[0].get('operationType') == 'CREATE':
@@ -553,44 +381,21 @@ for file in s3_bucket.objects.all():
           else:
             action = 'NULL'
             timestamp = 'NULL'
-            user = 'NULL'
-        
-         
-          uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
-          totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
-        
-#           rowCount = table_data.get('rowCount')
-#           columnCount = table_data.get('columnCount')
-#           timestamp = table_data.get('action').get('timestamp')
-#           print(type(action),type(fielddetails))
-#           load_timestamp = pd.datetime.now()
-#           load_timestamp = pd.Timestamp(np.datetime64[ns])
-#           print(load_timestamp)
-#           timestamp = table_data.get('timestamp')
-#           timestamp = datetime.fromtimestamp(int(timestamp))
-#           print(type(fielddetails),action)
-         
-#           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT","CREATED_BY","CREATIONTIMESTAMP","TOPQUERIES"]
-#           data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount,user,timestamp,topSqlQueries]]
-#           df = pd.DataFrame(data2,columns=column)
+            user = 'NULL'      
+     
           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","TOPQUERIES","FIELDDETAILS","ACTION","CREATED_BY","CREATIONTIMESTAMP"]
           data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,topSqlQueries,fielddetails,action,user,timestamp]]
           df = pd.DataFrame(data2,columns=column)
-#           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
-#           df['LOAD_TIMESTAMP'].astype('str')
+
           snow = utils.snow_connect(sf_account, sf_user, 'Atg@12345', sf_role, sf_warehouse, sf_database, sf_schema)
           load_df_to_snowflake(connection, df, sf_database, sf_schema, 'METADATA_REPORT')
-
-#           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
-#           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-#           snow.cursor().execute(insert_sql)
           
           with open('test_data.json', 'w') as f:
             json.dump(table_data,f)
           output_file_name = f"{Table_name}_output.json"
           source_type = "snowflake"
           table_data = "./test_data.json"
-          utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
+          utils.upload_file(table_data, output_bkt, source_type, f"{RunID}/{output_file_name}")
            
       except Exception as e:
           print(e)
