@@ -552,11 +552,11 @@ for file in s3_bucket.objects.all():
           if table_data.get('action') != none:
             action = table_data.get('action')
             if action[0].get('operationType') == 'CREATE':
-              timestamp = action[0].get('timestamp')
-              user = action[0].get('user')
-             else:
-               timestamp = 'NULL'
-               user = 'NULL'
+                timestamp = action[0].get('timestamp')
+                user = action[0].get('user')
+            else:
+                timestamp = 'NULL'
+                user = 'NULL'
           else:
             action = 'NULL'
         
