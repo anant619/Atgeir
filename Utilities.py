@@ -8,6 +8,7 @@ import subprocess
 import shlex
 from neo4j import GraphDatabase
 import snowflake.connector
+import psycopg2
 
 sys.path.append("../")
 
