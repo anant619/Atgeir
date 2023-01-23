@@ -254,7 +254,7 @@ def metadata_profiling():
                         yaml.safe_dump(configfile, f, default_flow_style=False)
                         print("file loaded successfully", local_file)
 #                         print(source_config)
-                return local_file, output_path, output_file_name
+#                 return local_file, output_path, output_file_name
                 print("ssssss")
 
                 replace_yml(local_file)
