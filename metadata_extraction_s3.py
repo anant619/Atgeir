@@ -522,7 +522,7 @@ def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     status, nchunks, nrows, _ = write_pandas(
         conn=snow, df=csv_df, table_name=tablename, schema=schemaname, quote_identifiers="False")
     print(status, nchunks, nrows)
-    snow.close()
+#     snow.close()
     return status, nchunks, nrows
 
 s3 = boto3.resource(
