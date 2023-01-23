@@ -549,18 +549,23 @@ for file in s3_bucket.objects.all():
           tags = table_data.get('tags')
           topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
           fielddetails = table_data.get('fields')
-#           action = table_data.get('action')
-#           rowCount = table_data.get('rowCount')
-#           columnCount = table_data.get('columnCount')
-#           if action[0].get('operationType') == 'CREATE':
-#               timestamp = action[0].get('timestamp')
-#               user = action[0].get('user')
-#           else:
-#               timestamp = 'NULL'
-#               user = 'NULL'
+          if table_data.get('action') != none:
+            action = table_data.get('action')
+            if action[0].get('operationType') == 'CREATE':
+              timestamp = action[0].get('timestamp')
+              user = action[0].get('user')
+             else:
+               timestamp = 'NULL'
+               user = 'NULL'
+          else:
+            action = 'NULL'
+        
+         
           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
         
+#           rowCount = table_data.get('rowCount')
+#           columnCount = table_data.get('columnCount')
 #           timestamp = table_data.get('action').get('timestamp')
 #           print(type(action),type(fielddetails))
 #           load_timestamp = pd.datetime.now()
@@ -573,10 +578,9 @@ for file in s3_bucket.objects.all():
 #           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT","CREATED_BY","CREATIONTIMESTAMP","TOPQUERIES"]
 #           data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount,user,timestamp,topSqlQueries]]
 #           df = pd.DataFrame(data2,columns=column)
-          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","TOPQUERIES"]
-          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,topSqlQueries]]
+          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","TOPQUERIES","FIELDDETAILS","ACTION"]
+          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,topSqlQueries,fielddetails,action]]
           df = pd.DataFrame(data2,columns=column)
-#           print(df)   
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
           snow = utils.snow_connect(sf_account, sf_user, 'Atg@12345', sf_role, sf_warehouse, sf_database, sf_schema)
