@@ -218,7 +218,7 @@ def metadata_profiling():
             s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
             s3_bucket = s3.Bucket(yml_bkt)
             for j in table_names:
-                
+                j = 'valid_item'
                 for file in s3_bucket.objects.all():
                     obj = s3.Object(yml_bkt, file.key)
                     body = obj.get()['Body'].read().decode('utf-8')
@@ -542,24 +542,24 @@ for file in s3_bucket.objects.all():
           data = json.loads(body)
           table_data = create_json(data)
           print(table_data)
-          source = table_data.get('Source')
-          Database_name = table_data.get('Database_name')
-          Schema_name = table_data.get('Schema_name')
-          Table_name = table_data.get('Table_name')
-          tags = table_data.get('tags')
-          topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
-          fielddetails = table_data.get('fields')
-          action = table_data.get('action')
-          rowCount = table_data.get('rowCount')
-          columnCount = table_data.get('columnCount')
-          if action[0].get('operationType') == 'CREATE':
-              timestamp = action[0].get('timestamp')
-              user = action[0].get('user')
-          else:
-              timestamp = 'NULL'
-              user = 'NULL'
-          uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
-          totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
+#           source = table_data.get('Source')
+#           Database_name = table_data.get('Database_name')
+#           Schema_name = table_data.get('Schema_name')
+#           Table_name = table_data.get('Table_name')
+#           tags = table_data.get('tags')
+#           topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
+#           fielddetails = table_data.get('fields')
+#           action = table_data.get('action')
+#           rowCount = table_data.get('rowCount')
+#           columnCount = table_data.get('columnCount')
+#           if action[0].get('operationType') == 'CREATE':
+#               timestamp = action[0].get('timestamp')
+#               user = action[0].get('user')
+#           else:
+#               timestamp = 'NULL'
+#               user = 'NULL'
+#           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
+#           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
         
 #           timestamp = table_data.get('action').get('timestamp')
 #           print(type(action),type(fielddetails))
@@ -579,9 +579,9 @@ for file in s3_bucket.objects.all():
 #           snow = utils.snow_connect(sf_account, sf_user, 'Atg@12345', sf_role, sf_warehouse, sf_database, sf_schema)
 #           load_df_to_snowflake(connection, df, sf_database, sf_schema, 'METADATA_REPORT')
 
-          insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
-          snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
-          snow.cursor().execute(insert_sql)
+#           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
+#           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
+#           snow.cursor().execute(insert_sql)
           
 #           with open('test_data.json', 'w') as f:
 #             json.dump(table_data,f)
