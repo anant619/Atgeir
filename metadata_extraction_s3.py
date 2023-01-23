@@ -202,23 +202,18 @@ def metadata_profiling():
         print(df)
         id_list = df['id']
         for i in id_list:
-#             print(i)
-            i = 2
             sql = f"select properties from data_sources where id = {i}";
             df1 = create_dataframe(sql, session)
             sql2 = f"select distinct(table_name) from hawkeye_details where data_source_id={i} and end_date is null"; 
             df2 = create_dataframe(sql2, session)
             table_names = df2['table_name']
-            print(table_names)
             
             config = df1['properties'][0]
             new_dict = json.loads(config)
             JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
-#             local_file, output_path, output_file_name = up_yml(JSONDict)
             s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
             s3_bucket = s3.Bucket(yml_bkt)
             for j in table_names:
-#                 j = 'valid_item'
                 for file in s3_bucket.objects.all():
                     obj = s3.Object(yml_bkt, file.key)
                     body = obj.get()['Body'].read().decode('utf-8')
@@ -266,7 +261,7 @@ def metadata_profiling():
 #      return 'success'
 
 
-# metadata_profiling()
+metadata_profiling()
 # sys.exit(0)
 import datetime,sys
 import json
@@ -342,7 +337,7 @@ for file in s3_bucket.objects.all():
     database = config['database']
 
     session = postgre_connect(host, database, username, password)
-    sf_conn_sql = f"select output_properties from data_sources where description = 'ML';"
+    sf_conn_sql = f"select output_properties from data_sources where data_source_type = 'Hawkeye';"
     df = create_dataframe(sf_conn_sql, session)
     config = df['output_properties'][0]
     new_dict = json.loads(config)
@@ -522,7 +517,6 @@ def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     status, nchunks, nrows, _ = write_pandas(
         conn=snow, df=csv_df, table_name=tablename, schema=schemaname, quote_identifiers="False")
     print(status, nchunks, nrows)
-#     snow.close()
     return status, nchunks, nrows
 
 s3 = boto3.resource(
@@ -541,7 +535,6 @@ for file in s3_bucket.objects.all():
       try:
           data = json.loads(body)
           table_data = create_json(data)
-#           print(table_data)
           source = table_data.get('Source')
           Database_name = table_data.get('Database_name')
           Schema_name = table_data.get('Schema_name')
@@ -578,8 +571,8 @@ for file in s3_bucket.objects.all():
 #           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT","CREATED_BY","CREATIONTIMESTAMP","TOPQUERIES"]
 #           data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount,user,timestamp,topSqlQueries]]
 #           df = pd.DataFrame(data2,columns=column)
-          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","TOPQUERIES","FIELDDETAILS","ACTION"]
-          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,topSqlQueries,fielddetails,action]]
+          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","TOPQUERIES","FIELDDETAILS","ACTION","CREATIONTIMESTAMP","TOPQUERIES"]
+          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,topSqlQueries,fielddetails,action,user,timestamp]]
           df = pd.DataFrame(data2,columns=column)
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
@@ -590,12 +583,12 @@ for file in s3_bucket.objects.all():
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
 #           snow.cursor().execute(insert_sql)
           
-#           with open('test_data.json', 'w') as f:
-#             json.dump(table_data,f)
-#           output_file_name = "test_data_final.json"
-#           source_type = "snowflake"
-#           table_data = "./test_data.json"
-#           utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
+          with open('test_data.json', 'w') as f:
+            json.dump(table_data,f)
+          output_file_name = "test_data_final.json"
+          source_type = "snowflake"
+          table_data = "./test_data.json"
+          utils.upload_file(table_data, bucket, source_type, f"{RunID}/{output_file_name}")
            
       except Exception as e:
           print(e)
