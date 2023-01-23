@@ -223,9 +223,9 @@ def metadata_profiling():
                     obj = s3.Object(yml_bkt, file.key)
                     body = obj.get()['Body'].read().decode('utf-8')
                     configfile = yaml.safe_load(body)
-                    output_file_name = f"output.json"
+                    output_file_name = f"output_{j}.json"
 
-                    output_path = f"./metadata.json"
+                    output_path = f"./metadata_{j}.json"
 
                     source_config = configfile['source']['config']
                     # source_config['username'] = JSONDict.get('NAME')
