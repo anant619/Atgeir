@@ -218,7 +218,7 @@ def metadata_profiling():
             s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
             s3_bucket = s3.Bucket(yml_bkt)
             for j in table_names:
-                j = 'valid_item'
+#                 j = 'valid_item'
                 for file in s3_bucket.objects.all():
                     obj = s3.Object(yml_bkt, file.key)
                     body = obj.get()['Body'].read().decode('utf-8')
