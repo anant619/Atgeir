@@ -541,8 +541,8 @@ for file in s3_bucket.objects.all():
       try:
           data = json.loads(body)
           table_data = create_json(data)
-          print(table_data)
-#           source = table_data.get('Source')
+#           print(table_data)
+          source = table_data.get('Source')
 #           Database_name = table_data.get('Database_name')
 #           Schema_name = table_data.get('Schema_name')
 #           Table_name = table_data.get('Table_name')
@@ -573,11 +573,14 @@ for file in s3_bucket.objects.all():
 #           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT","CREATED_BY","CREATIONTIMESTAMP","TOPQUERIES"]
 #           data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount,user,timestamp,topSqlQueries]]
 #           df = pd.DataFrame(data2,columns=column)
+          column = ["SOURCE"]
+          data2 = [[source]]
+          df = pd.DataFrame(data2,columns=column)
 #           print(df)   
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
-#           snow = utils.snow_connect(sf_account, sf_user, 'Atg@12345', sf_role, sf_warehouse, sf_database, sf_schema)
-#           load_df_to_snowflake(connection, df, sf_database, sf_schema, 'METADATA_REPORT')
+          snow = utils.snow_connect(sf_account, sf_user, 'Atg@12345', sf_role, sf_warehouse, sf_database, sf_schema)
+          load_df_to_snowflake(connection, df, sf_database, sf_schema, 'METADATA_REPORT')
 
 #           insert_sql = f"insert into DATAGEIR_HAWKEYE_DEV.HAWKEYE_APP.METADATA_REPORT (source, Database_name, Schema_name, Table_name, tags, UNIQUEUSERUSAGECOUNT,TOTALQUERIESCOUNT,RUNID,fielddetails,action) VALUES ('{source}', '{Database_name}', '{Schema_name}', '{Table_name}','{tags}','{uniqueusercount}','{totalSqlQueriesCount}','{RunId}',to_variant('{fielddetails}'),to_variant('{action}');"
 #           snow = utils.snow_connect('AFA78268', 'sayali', 'Atgeir@03', 'ACCOUNTADMIN', 'HAWKEYE_WH', 'DATAGEIR_HAWKEYE_DEV', 'HAWKEYE_APP')
