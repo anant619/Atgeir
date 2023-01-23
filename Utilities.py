@@ -9,6 +9,7 @@ import shlex
 from neo4j import GraphDatabase
 import snowflake.connector
 import psycopg2
+import pandas as pd
 
 sys.path.append("../")
 
