@@ -543,12 +543,12 @@ for file in s3_bucket.objects.all():
           table_data = create_json(data)
 #           print(table_data)
           source = table_data.get('Source')
-#           Database_name = table_data.get('Database_name')
-#           Schema_name = table_data.get('Schema_name')
-#           Table_name = table_data.get('Table_name')
-#           tags = table_data.get('tags')
-#           topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
-#           fielddetails = table_data.get('fields')
+          Database_name = table_data.get('Database_name')
+          Schema_name = table_data.get('Schema_name')
+          Table_name = table_data.get('Table_name')
+          tags = table_data.get('tags')
+          topSqlQueries = table_data.get('datasetUsage').get('topSqlQueries')
+          fielddetails = table_data.get('fields')
 #           action = table_data.get('action')
 #           rowCount = table_data.get('rowCount')
 #           columnCount = table_data.get('columnCount')
@@ -558,8 +558,8 @@ for file in s3_bucket.objects.all():
 #           else:
 #               timestamp = 'NULL'
 #               user = 'NULL'
-#           uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
-#           totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
+          uniqueusercount = table_data.get('datasetUsage').get('uniqueUserCount')
+          totalSqlQueriesCount = table_data.get('datasetUsage').get('totalSqlQueriesCount')
         
 #           timestamp = table_data.get('action').get('timestamp')
 #           print(type(action),type(fielddetails))
@@ -573,8 +573,8 @@ for file in s3_bucket.objects.all():
 #           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT","CREATED_BY","CREATIONTIMESTAMP","TOPQUERIES"]
 #           data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount,user,timestamp,topSqlQueries]]
 #           df = pd.DataFrame(data2,columns=column)
-          column = ["SOURCE"]
-          data2 = [[source]]
+          column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID"]
+          data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID]]
           df = pd.DataFrame(data2,columns=column)
 #           print(df)   
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
