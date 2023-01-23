@@ -103,7 +103,7 @@ def metadata_profiling():
 
         session = utils.postgre_connect(host, database, username, password)
         sf_conn_sql = f"select id, properties, output_properties from data_sources where data_source_type = 'Hawkeye';"
-        df = create_dataframe(sf_conn_sql, session)
+        df = utils.create_dataframe(sf_conn_sql, session)
         print(df)
         id_list = df['id']
         for i in id_list:
