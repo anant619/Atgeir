@@ -255,7 +255,7 @@ def metadata_profiling():
                         print("file loaded successfully", local_file)
 #                         print(source_config)
 #                 return local_file, output_path, output_file_name
-                print("ssssss")
+#                 print("ssssss")
 
                     replace_yml(local_file)
                     call_datahub(local_file)
