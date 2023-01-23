@@ -261,7 +261,7 @@ def metadata_profiling():
 #      return 'success'
 
 
-# metadata_profiling()
+metadata_profiling()
 # sys.exit(0)
 import datetime,sys
 import json
