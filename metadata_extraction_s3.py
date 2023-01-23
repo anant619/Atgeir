@@ -267,7 +267,7 @@ def metadata_profiling():
 
 
 metadata_profiling()
-sys.exit(0)
+# sys.exit(0)
 import datetime,sys
 import json
 from datetime import date
