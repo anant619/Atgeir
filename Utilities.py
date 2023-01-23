@@ -19,6 +19,19 @@ def snow_connect(sf_account, sf_user, sf_password, sf_role, sf_warehouse, sf_dat
     print("connected to Snowflake")
     return connection
 
+def postgre_connect(host, database, user, password):
+    conn = None
+    try:
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(host=host,
+                                database=database,
+                                user=user,
+                                password=password)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    return conn
+
+
 def read_config_file(config_dir):
     """ 
     Sourcing Configuration File
@@ -35,17 +48,6 @@ def read_config_file(config_dir):
     return conf
 
 
-def get_graph_driver(host_port, username, password):
-    try:
-        driver = GraphDatabase.driver(host_port,auth=(username,password))
-        return driver
-    except Exception as ex:
-        # logging.error(f"Error code    = {type(ex).__name__}")
-        # logging.error(f"Error Message = {ex}")
-        print(f"Error code    = {type(ex).__name__}")
-        print(f"Error Message = {ex}")
-
-
 def replace_yml(path):
     try:
         search_text, replace_text = 'allow:', 'allow: \n      - '
@@ -56,39 +58,21 @@ def replace_yml(path):
         with open(path, 'w') as file:
             file.write(data)
         print(f"Text replaced for {path}")
+        print(data)
     except Exception as ex:
-        # logging.error(f"Error code    = {type(ex).__name__}")
-        # logging.error(f"Error Message = {ex}")
         print(f"Error code    = {type(ex).__name__}")
         print(f"Error Message = {ex}")
 
-
-def upload_file(file_path, bucket_name, source, output_file_name):
-    try:
-        s3_client = boto3.client('s3')
-        s3_client.upload_file(file_path, bucket_name, '%s/%s' %
-                              (source, output_file_name))
-        print("file uploaded on s3")
-    except Exception as ex:
-        # logging.error(f"Error code    = {type(ex).__name__}")
-        # logging.error(f"Error Message = {ex}")
-        print(f"Error code    = {type(ex).__name__}")
-        print(f"Error Message = {ex}")
-
-
-def call_datahub(path):
-    try:
-        script_path = "../scripts/datahub_call.sh"  # for ec2
-        #script_path = "Metadata_Ingestion/scripts/datahub_call.sh"  # for local
-
-        subprocess.call(shlex.split(f"sh {script_path} {path}"))
-        print("Metadata script completed...")
-    except Exception as ex:
-        # logging.error(f"Error code    = {type(ex).__name__}")
-        # logging.error(f"Error Message = {ex}")
-        print(f"Error code    = {type(ex).__name__}")
-        print(f"Error Message = {ex}")
-
+def create_dataframe(sql, conn):
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    cols = []
+    for elt in cursor.description:
+        cols.append(elt[0])
+    df = pd.DataFrame(data=data, columns=cols)
+    cursor.close()
+    return df
 
 def update_yml(source_type, conf, yml_name):
     try:
