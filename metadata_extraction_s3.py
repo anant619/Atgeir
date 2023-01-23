@@ -395,7 +395,7 @@ for file in s3_bucket.objects.all():
           output_file_name = f"{Table_name}_output.json"
           source_type = "snowflake"
           table_data = "./test_data.json"
-          utils.upload_file(table_data, output_bkt, source_type, f"{RunID}/{output_file_name}")
+          upload_file(table_data, output_bkt, source_type, f"{RunID}/{output_file_name}")
            
       except Exception as e:
           print(e)
