@@ -572,7 +572,8 @@ for file in s3_bucket.objects.all():
          
           column = ["SOURCE", "DATABASE_NAME", "SCHEMA_NAME", "TABLE_NAME", "TAGS", "UNIQUEUSERUSAGECOUNT","TOTALQUERIESCOUNT","RUNID","FIELDDETAILS","ACTION","COLUMNCOUNT","ROWCOUNT","CREATED_BY","CREATIONTIMESTAMP","TOPQUERIES"]
           data2 = [[source, Database_name,Schema_name,Table_name,tags,uniqueusercount,totalSqlQueriesCount,RunID,fielddetails,action,columnCount,rowCount,user,timestamp,topSqlQueries]]
-          df = pd.DataFrame(data2,columns=column)
+          df = pd.DataFrame(data2,columns=column.notna())
+          print(df)   
 #           df['LOAD_TIMESTAMP'].astype('datetime64[ns]')
 #           df['LOAD_TIMESTAMP'].astype('str')
 #           snow = utils.snow_connect(sf_account, sf_user, 'Atg@12345', sf_role, sf_warehouse, sf_database, sf_schema)
