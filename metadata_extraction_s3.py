@@ -98,9 +98,9 @@ def up_yml(JSONDict):
         obj = s3.Object(yml_bkt, file.key)
         body = obj.get()['Body'].read().decode('utf-8')
         configfile = yaml.safe_load(body)
-        output_file_name = f"output.json"
+        output_file_name = f"output_{i}.json"
 
-        output_path = f"./metadata.json"
+        output_path = f"./metadata_{i}.json"
 
         source_config = configfile['source']['config']
         # source_config['username'] = JSONDict.get('NAME')
@@ -124,7 +124,7 @@ def up_yml(JSONDict):
         source_config['warehouse'] = F'{JSONDict.get("WAREHOUSE")}'
         source_config['role'] = F'{JSONDict.get("ROLE")}'
         configfile['sink']['config']['filename'] = output_path
-        local_file = f'./datahub.yml'
+        local_file = f'./datahub_{i}.yml'
 
         with open(local_file, 'w+') as f:
             yaml.safe_dump(configfile, f, default_flow_style=False)
