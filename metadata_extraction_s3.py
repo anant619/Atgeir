@@ -203,67 +203,67 @@ def metadata_profiling():
         id_list = df['id']
         for i in id_list:
             print(i)
-            i = 2
-            sql = f"select properties from data_sources where id = {i}";
-            df1 = create_dataframe(sql, session)
-            sql2 = f"select distinct(table_name) from hawkeye_details where data_source_id={i} and end_date is null"; 
-            df2 = create_dataframe(sql2, session)
-            table_names = df2['table_name']
-            print(table_names)
+#             i = 2
+#             sql = f"select properties from data_sources where id = {i}";
+#             df1 = create_dataframe(sql, session)
+#             sql2 = f"select distinct(table_name) from hawkeye_details where data_source_id={i} and end_date is null"; 
+#             df2 = create_dataframe(sql2, session)
+#             table_names = df2['table_name']
+#             print(table_names)
             
-            config = df1['properties'][0]
-            new_dict = json.loads(config)
-            JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
-#             local_file, output_path, output_file_name = up_yml(JSONDict)
-            s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
-            s3_bucket = s3.Bucket(yml_bkt)
-            for j in table_names:
+#             config = df1['properties'][0]
+#             new_dict = json.loads(config)
+#             JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
+# #             local_file, output_path, output_file_name = up_yml(JSONDict)
+#             s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
+#             s3_bucket = s3.Bucket(yml_bkt)
+#             for j in table_names:
                 
-                for file in s3_bucket.objects.all():
-                    obj = s3.Object(yml_bkt, file.key)
-                    body = obj.get()['Body'].read().decode('utf-8')
-                    configfile = yaml.safe_load(body)
-                    output_file_name = f"output_{j}.json"
+#                 for file in s3_bucket.objects.all():
+#                     obj = s3.Object(yml_bkt, file.key)
+#                     body = obj.get()['Body'].read().decode('utf-8')
+#                     configfile = yaml.safe_load(body)
+#                     output_file_name = f"output_{j}.json"
 
-                    output_path = f"./metadata_{j}.json"
+#                     output_path = f"./metadata_{j}.json"
 
-                    source_config = configfile['source']['config']
-                    # source_config['username'] = JSONDict.get('NAME')
-                    source_config['username'] = "sayali"
-                    # source_config['password'] = 'JSONDict.get('password')'
-                    source_config['password'] = "Atgeir@03"
-                    # source_config['table_pattern']['allow'] = F".*{JSONDict.get('table')}"
-                    source_config['table_pattern']['allow'] = F".*{j}"
-                    source_config['profile_pattern']['allow'] = F'{JSONDict.get("DATABASE")}.*.*'
+#                     source_config = configfile['source']['config']
+#                     # source_config['username'] = JSONDict.get('NAME')
+#                     source_config['username'] = "sayali"
+#                     # source_config['password'] = 'JSONDict.get('password')'
+#                     source_config['password'] = "Atgeir@03"
+#                     # source_config['table_pattern']['allow'] = F".*{JSONDict.get('table')}"
+#                     source_config['table_pattern']['allow'] = F".*{j}"
+#                     source_config['profile_pattern']['allow'] = F'{JSONDict.get("DATABASE")}.*.*'
 
-                    database_pattern = F'^{JSONDict.get("DATABASE")}$'
-                    source_config['database_pattern']['allow'] = database_pattern
-                    # source_config['provision_role']['admin_username'] = F'"{JSONDict.get("NAME")}"'
-                    source_config['provision_role']['admin_username'] = 'sayali'
-                    # source_config['provision_role']['admin_password'] = JSONDict.get(
-                    #     'password')
-                    source_config['provision_role']['admin_password'] = 'Atgeir@03'
-                    source_config['account_id'] = F'{JSONDict.get("ACCOUNT")}'
-            #         source_config['check_role_grants'] = 'false'
-                    source_config['provision_role']['run_ingestion'] = 'true'
-                    source_config['warehouse'] = F'{JSONDict.get("WAREHOUSE")}'
-                    source_config['role'] = F'{JSONDict.get("ROLE")}'
-                    configfile['sink']['config']['filename'] = output_path
-                    local_file = f'./datahub_{j}.yml'
+#                     database_pattern = F'^{JSONDict.get("DATABASE")}$'
+#                     source_config['database_pattern']['allow'] = database_pattern
+#                     # source_config['provision_role']['admin_username'] = F'"{JSONDict.get("NAME")}"'
+#                     source_config['provision_role']['admin_username'] = 'sayali'
+#                     # source_config['provision_role']['admin_password'] = JSONDict.get(
+#                     #     'password')
+#                     source_config['provision_role']['admin_password'] = 'Atgeir@03'
+#                     source_config['account_id'] = F'{JSONDict.get("ACCOUNT")}'
+#             #         source_config['check_role_grants'] = 'false'
+#                     source_config['provision_role']['run_ingestion'] = 'true'
+#                     source_config['warehouse'] = F'{JSONDict.get("WAREHOUSE")}'
+#                     source_config['role'] = F'{JSONDict.get("ROLE")}'
+#                     configfile['sink']['config']['filename'] = output_path
+#                     local_file = f'./datahub_{j}.yml'
 
-                    with open(local_file, 'w+') as f:
-                        yaml.safe_dump(configfile, f, default_flow_style=False)
-                        print("file loaded successfully", local_file)
-#                         print(source_config)
-#                 return local_file, output_path, output_file_name
-#                 print("ssssss")
+#                     with open(local_file, 'w+') as f:
+#                         yaml.safe_dump(configfile, f, default_flow_style=False)
+#                         print("file loaded successfully", local_file)
+# #                         print(source_config)
+# #                 return local_file, output_path, output_file_name
+# #                 print("ssssss")
 
-                    replace_yml(local_file)
-                    call_datahub(local_file)
-                    upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
-                    stroe_run_id(output_bkt, RunID)
+#                     replace_yml(local_file)
+#                     call_datahub(local_file)
+#                     upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
+#                     stroe_run_id(output_bkt, RunID)
             
-            return 'success'
+#             return 'success'
 
 
 metadata_profiling()
@@ -290,9 +290,9 @@ config_dir = "./config.properties"
 today = date.today()
 current_date = today.strftime("%Y-%m-%d")
 
-today = date.today()
-timestamp = datetime.now()
-RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
+# today = date.today()
+# timestamp = datetime.now()
+# RunID = str(timestamp).replace('-', '').replace(' ', '').replace(':', '').replace('.', '')
 
 def create_dataframe(sql, conn):
     cursor = conn.cursor()
