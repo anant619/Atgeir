@@ -13,7 +13,7 @@ export client_email=${4}
 
 echo "Executing" ${job_type} "job for client" ${client_id}
 
-if [ $input_args -eq 3 ]
+if [ $input_args -eq 4 ]
 then
 
   job_param=${3}
