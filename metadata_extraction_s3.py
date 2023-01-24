@@ -359,11 +359,14 @@ def metadata_profiling():
                         print("login Successful")
                         output_s3_bucket = s3.Bucket(output_bkt)
                         RunId = get_RunId()
+                        print(RunID,type(RunID))
 
                         for file in output_s3_bucket.objects.all():
                             if str(RunId) in file.key:
                               obj = s3.Object(output_bkt, file.key)
+                              print(obj,type(obj))
                               body = obj.get()['Body'].read().decode('utf-8')
+                              print(body,type(body))
                               try:
                                   data = json.loads(body)
                                   table_data = create_json(data)
