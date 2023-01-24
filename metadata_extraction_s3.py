@@ -174,7 +174,7 @@ def metadata_profiling():
                         stroe_run_id(output_bkt, RunID)       
             
 metadata_profiling()
-sys.exit(0)
+# sys.exit(0)
     
 s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
 s3_bucket = s3.Bucket(pgs_config_bucket)
