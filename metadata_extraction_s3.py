@@ -20,7 +20,7 @@ import snowflake.connector
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 import logging
-email = os.environment['client_email']
+email = os.environ['client_email']
 print(email)
 sys.exit(0)
 config_dir = "./config.properties"  
