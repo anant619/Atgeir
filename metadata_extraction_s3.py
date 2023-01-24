@@ -20,7 +20,7 @@ import snowflake.connector
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 import logging
-# email = os.environ['client_email']
+email = os.environ['client_email']
 # print(email)
 # sys.exit(0)
 config_dir = "./config.properties"  
@@ -223,7 +223,7 @@ def metadata_profiling():
         database = config['database']
 
         session = utils.postgre_connect(host, database, username, password)
-        sql_uuid = f"select uuid from requests where email='atgeiradmin23@atgeirsolutions.com';"
+        sql_uuid = f"select uuid from requests where email='{email}';"
         df_uuid = utils.create_dataframe(sql_uuid, session)
         a = df_uuid['uuid']
         print(a[0])
