@@ -303,7 +303,7 @@ def metadata_profiling():
                             database = config['database']
 
                             session = utils.postgre_connect(host, database, username, password)
-                            sf_conn_sql = f"select output_properties from data_sources where data_source_type = 'Hawkeye' and data_source_id={d};"
+                            sf_conn_sql = f"select output_properties from data_sources where data_source_type = 'Hawkeye' and id={d};"
                             df = utils.create_dataframe(sf_conn_sql, session)
                             config = df['output_properties'][0]
                             new_dict = json.loads(config)
