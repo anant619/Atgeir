@@ -354,7 +354,7 @@ def metadata_profiling():
                         utils.replace_yml(local_file)
                         call_datahub(local_file)
                         upload_file(output_path, output_bkt, source_type, f"{RunID}/{output_file_name}")
-                        stroe_run_id(output_bkt, RunID)       
+#                         stroe_run_id(output_bkt, RunID)       
                         s3 = boto3.resource('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key )
                         print("login Successful")
                         s3_bucket = s3.Bucket(output_bkt)
