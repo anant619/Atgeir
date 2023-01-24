@@ -104,13 +104,15 @@ def metadata_profiling():
         database = config['database']
 
         session = utils.postgre_connect(host, database, username, password)
-        sql_uuid = f"select uuid from requests where email='rajeev.sheguri@atgeirsolutions.com';"
+        sql_uuid = f"select uuid from requests where email='atgeiradmin23@atgeirsolutions.com';"
         df_uuid = utils.create_dataframe(sql_uuid, session)
         a = df_uuid['uuid']
         print(a[0])
         sql_uuid1 = f"select uuid from requests where parent_uuid ='{a[0]}';"
         df_uuid1 = utils.create_dataframe(sql_uuid1, session)
         b = df_uuid1['uuid']
+        for i in b:
+            print(i)
         print(b)
         sys.exit(0)
         sf_conn_sql = f"select id, properties, output_properties from data_sources where data_source_type = 'Hawkeye' and parent_uuid = '{a[0]}';"
