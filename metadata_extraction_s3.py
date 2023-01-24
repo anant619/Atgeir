@@ -102,7 +102,7 @@ def metadata_profiling():
         database = config['database']
 
         session = utils.postgre_connect(host, database, username, password)
-        sql_uuid = f"select uuid from requests where email='rajeev.sheguri@atgeirsolutions.com";
+        sql_uuid = f"select uuid from requests where email='rajeev.sheguri@atgeirsolutions.com';"
         df_uuid = utils.create_dataframe(sql_uuid, session)
         print(df_uuid)
         sys.exit(0)
