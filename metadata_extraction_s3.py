@@ -22,7 +22,7 @@ from cryptography.hazmat.backends import default_backend
 import logging
 # email = os.environ['client_email']
 # print(email)
-sys.exit(0)
+# sys.exit(0)
 config_dir = "./config.properties"  
 today = date.today()
 current_date = today.strftime("%Y-%m-%d")
