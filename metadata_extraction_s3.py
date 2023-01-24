@@ -105,8 +105,8 @@ def metadata_profiling():
         sql_uuid = f"select uuid from requests where email='rajeev.sheguri@atgeirsolutions.com';"
         df_uuid = utils.create_dataframe(sql_uuid, session)
         a = df_uuid['uuid']
-        print(a)
-        sf_conn_sql = f"select id, properties, output_properties from data_sources where data_source_type = 'Hawkeye' and parent_uuid = {a};"
+        print(a[0])
+        sf_conn_sql = f"select id, properties, output_properties from data_sources where data_source_type = 'Hawkeye' and parent_uuid = '{a[0]}';"
         df = utils.create_dataframe(sf_conn_sql, session)
         print(df)
         sys.exit(0)
