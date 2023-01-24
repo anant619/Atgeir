@@ -250,6 +250,8 @@ def metadata_profiling():
                 s3_bucket = s3.Bucket(yml_bkt)
                 for j in table_names:
                     for file in s3_bucket.objects.all():
+                        print(file)
+                     sys.exit(0)
                         obj = s3.Object(yml_bkt, file.key)
                         body = obj.get()['Body'].read().decode('utf-8')
                         configfile = yaml.safe_load(body)
