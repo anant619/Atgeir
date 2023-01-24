@@ -208,8 +208,8 @@ def metadata_profiling():
         aws_secret_access_key=aws_secret_access_key)
     logging.info("login Successful!")
     print("login Successful")
-    s3_bucket = s3.Bucket(pgs_config_bucket)
-    for file in s3_bucket.objects.all():
+    pgs_s3_bucket = s3.Bucket(pgs_config_bucket)
+    for file in pgs_s3_bucket.objects.all():
         obj = s3.Object(pgs_config_bucket, file.key)
         body = obj.get()['Body'].read().decode('utf-8')
         print(obj, body)
@@ -245,8 +245,8 @@ def metadata_profiling():
                 df2 = utils.create_dataframe(sql2, session)
                 table_names = df2['table_name']
                 s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
-                s3_bucket = s3.Bucket(pgs_config_bucket)
-                for file in s3_bucket.objects.all():
+                pgs_s3_bucket = s3.Bucket(pgs_config_bucket)
+                for file in pgs_s3_bucket.objects.all():
                     obj = s3.Object(pgs_config_bucket, file.key)
                     body = obj.get()['Body'].read().decode('utf-8')
                     print(obj, body)
@@ -311,9 +311,9 @@ def metadata_profiling():
                 new_dict = json.loads(config)
                 JSONDict = dict((k.upper().strip(), v.upper().strip()) for k, v in new_dict.items())
                 s3 = boto3.resource('s3',aws_access_key_id=aws_access_key_id,aws_secret_access_key=aws_secret_access_key)
-                s3_bucket = s3.Bucket(yml_bkt)
+                yml_s3_bucket = s3.Bucket(yml_bkt)
                 for j in table_names:
-                    for file in s3_bucket.objects.all():
+                    for file in yml_s3_bucket.objects.all():
                         print(file,'sssssss')
 #                         sys.exit(0)
                         obj = s3.Object(yml_bkt, file.key)
@@ -357,10 +357,10 @@ def metadata_profiling():
 #                         stroe_run_id(output_bkt, RunID)       
                         s3 = boto3.resource('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key )
                         print("login Successful")
-                        s3_bucket = s3.Bucket(output_bkt)
+                        output_s3_bucket = s3.Bucket(output_bkt)
                         RunId = get_RunId()
 
-                        for file in s3_bucket.objects.all():
+                        for file in output_s3_bucket.objects.all():
                             if str(RunId) in file.key:
                               obj = s3.Object(output_bkt, file.key)
                               body = obj.get()['Body'].read().decode('utf-8')
