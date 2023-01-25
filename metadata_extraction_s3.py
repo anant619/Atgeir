@@ -227,7 +227,7 @@ def metadata_profiling():
 #         df_uuid = utils.create_dataframe(sql_uuid, session)
 #         a = df_uuid['uuid']
 #         print(a[0])
-        sql_uuid1 = f"select uuid from requests where parent_uuid ='a7c72ce4-793c-4c5e-bab0-68ddda6b93d1';"
+        sql_uuid1 = f"select uuid from requests where parent_uuid ='{client_id}';"
         df_uuid1 = utils.create_dataframe(sql_uuid1, session)
         b = df_uuid1['uuid']
         print(b)
