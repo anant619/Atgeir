@@ -20,7 +20,7 @@ import snowflake.connector
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 import logging
-client_id = os.environ['client_id']
+client_uuid = os.environ['client_uuid']
 # print(email)
 # sys.exit(0)
 config_dir = "./config.properties"  
@@ -227,7 +227,8 @@ def metadata_profiling():
 #         df_uuid = utils.create_dataframe(sql_uuid, session)
 #         a = df_uuid['uuid']
 #         print(a[0])
-        sql_uuid1 = f"select uuid from requests where parent_uuid ='{client_id}';"
+#         client_id = os.environ['client_id']
+        sql_uuid1 = f"select uuid from requests where parent_uuid ='{client_uuid}';"
         df_uuid1 = utils.create_dataframe(sql_uuid1, session)
         b = df_uuid1['uuid']
         print(b)
