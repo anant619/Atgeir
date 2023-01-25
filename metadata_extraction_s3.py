@@ -231,7 +231,7 @@ def metadata_profiling():
         df_uuid1 = utils.create_dataframe(sql_uuid1, session)
         b = df_uuid1['uuid']
         print(b)
-        sys.exit(0)
+#         sys.exit(0)
         for i in b:
 #             sys.exit(0)
             sf_conn_sql = f"select id, properties, output_properties from data_sources where data_source_type = 'Hawkeye' and parent_uuid = '{i}';"
