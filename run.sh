@@ -6,6 +6,7 @@ input_args=$#
 
 job_type=${1}
 client=${2}
+client_id=${4}
 
 export client_id=${client}
 export config_dir=./config.properties
