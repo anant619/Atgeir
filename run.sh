@@ -9,7 +9,7 @@ client=${2}
 
 export client_id=${client}
 export config_dir=./config.properties
-export client_email=${4}
+export client_id=${4}
 
 echo "Executing" ${job_type} "job for client" ${client_id}
 
