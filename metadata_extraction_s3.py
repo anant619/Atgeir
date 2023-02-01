@@ -14,7 +14,7 @@ import subprocess
 import shlex
 from datetime import datetime
 import Utilities as utils
-from snowflake.connector.pandas_tools import write_pandas
+# from snowflake.connector.pandas_tools import write_pandas
 import psycopg2
 import snowflake.connector
 from cryptography.hazmat.primitives import serialization
@@ -144,7 +144,7 @@ def create_json(data):
 
 def load_df_to_snowflake(snow, csv_df, dbname, schemaname, tablename):
     print("Loading Data Frame")
-    status, nchunks, nrows, _ = write_pandas(
+    status, nchunks, nrows, _ = snowflake.connector.pandas_tools.write_pandas(
         conn=snow, df=csv_df, table_name=tablename, schema=schemaname, quote_identifiers="False")
     print(status, nchunks, nrows)
     return status, nchunks, nrows
