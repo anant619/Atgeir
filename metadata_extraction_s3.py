@@ -16,7 +16,7 @@ from datetime import datetime
 import Utilities as utils
 # from snowflake.connector.pandas_tools import write_pandas
 import psycopg2
-import snowflake.connector
+# import snowflake.connector
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 import logging
