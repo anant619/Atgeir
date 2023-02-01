@@ -21,7 +21,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 import logging
 # import snowflake
-# client_uuid = os.environ['client_uuid']
+client_uuid = os.environ['client_uuid']
 # print(email)
 # sys.exit(0)
 config_dir = "./config.properties"  
@@ -229,7 +229,7 @@ def metadata_profiling():
 #         a = df_uuid['uuid']
 #         print(a[0])
 #         client_id = os.environ['client_id']
-        sql_uuid1 = f"select uuid from requests where parent_uuid = 'a7c72ce4-793c-4c5e-bab0-68ddda6b93d1';"
+        sql_uuid1 = f"select uuid from requests where parent_uuid = '{client_uuid}';"
         df_uuid1 = utils.create_dataframe(sql_uuid1, session)
         b = df_uuid1['uuid']
         print(b)
@@ -272,9 +272,9 @@ def metadata_profiling():
                     sf_account_url = JSONDict.get('ACCOUNT_URL')
                     sf_account = JSONDict.get('ACCOUNT')
                     sf_role = JSONDict.get('ROLE')
-                    sf_user = JSONDict.get('NAME')
+                    sf_user = JSONDict.get('USERNAME')
                     sf_privatekey = JSONDict.get('PRIVATEKEY')
-                    sf_passphrase = JSONDict.get('PASSPHRASE').lower()
+                    sf_passphrase = JSONDict.get('PASSPHRASE')
                     sf_warehouse = JSONDict.get('WAREHOUSE')
                     sf_database = JSONDict.get('DATABASE')
                     sf_schema = JSONDict.get('SCHEMA')
