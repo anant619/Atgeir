@@ -20,6 +20,7 @@ import psycopg2
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 import logging
+import snowflake
 # client_uuid = os.environ['client_uuid']
 # print(email)
 # sys.exit(0)
