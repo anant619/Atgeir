@@ -7,7 +7,7 @@ import boto3
 import subprocess
 import shlex
 from neo4j import GraphDatabase
-import snowflake.connector
+import snowflake
 import psycopg2
 import pandas as pd
 
